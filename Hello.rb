@@ -1,1 +1,1 @@
-puts "Hello privet"
+puts "Hello priv"
