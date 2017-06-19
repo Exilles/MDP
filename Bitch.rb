@@ -1,1 +1,1 @@
-puts "I'm not bitch!"
+puts "I'm not"
