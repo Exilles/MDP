@@ -22,8 +22,6 @@ post('/inventory/create') do
   redirect '/inventory/new'
 end
 
-get('/inventory/:id') do
-  id = params['id'].to_i
-  @item = store.find(id)
-  erb :show
+get('/') do
+  erb :login
 end

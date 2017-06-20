@@ -6,13 +6,21 @@
 </head>
 <body>
 <h1>Inventory</h1>
-<ul>
+<table border="1">
+    <tr bgcolor="#d3d3d3" >
+        <td><b>Name</b></td>
+        <td><b>Count</b></td>
+        <td><b>Cost</b></td>
+    </tr>
     <% @items.each do |item| %>
-        <li>
-            <a href="/inventory/<%= item.id %>"><%= item.name %></a>
-        </li>
+        <tr>
+            <td><%= item.name %></td>
+            <td><%= item.count %></td>
+            <td><%= item.cost %></td>
+        </tr>
     <% end %>
-</ul>
-<a href="/inventory/new">Add New Item</a>
+</table>
+<input type="submite"
+<button><a href="/inventory/new">Add New Item</a></button>
 </body>
 </html>
