@@ -16,7 +16,7 @@ end
 post('/inventory/create') do
   @item = Item.new
   @item.name = params['name']
-  @item.count = params['count']
+  #@item.count = params['count']
   @item.cost = params['cost']
   store.save(@item)
   redirect '/inventory/new'
