@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <title>Inventory - <%= @item.name %></title>
+</head>
+<body>
+<h1><%= @item.name %></h1>
+<table>
+    <tr>
+        <td><strong>Name:</strong></td>
+        <td><%= @item.name %></td>
+    </tr>
+    <tr>
+        <td><strong>Count:</strong></td>
+        <td><%= @item.count %></td>
+    </tr>
+    <tr>
+        <td><strong>Cost:</strong></td>
+        <td><%= @item.cost %></td>
+    </tr>
+</table>
+<a href="/inventory">Back to Inventory</a>
+</body>
+</html>
