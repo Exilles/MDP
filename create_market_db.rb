@@ -8,13 +8,17 @@ DB.create_table (:users) do
   String :login
   String :password
   Integer :money
+  one_to_many :items
+  one_to_many :lots
 end
 
 DB.create_table (:items) do
   primary_key :id
   Integer :countItems
   String :name
+  Integer :cost
   foreign_key :users_id, :users
+  many_to_one :users
 end
 
 DB.create_table (:ads) do
@@ -29,4 +33,5 @@ DB.create_table (:lots) do
   Integer :cost
   foreign_key :users_id, :users
   foreign_key :ads_id, :ads
+  many_to_one :users
 end

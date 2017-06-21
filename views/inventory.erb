@@ -4,15 +4,14 @@
     <meta charset='UTF-8' />
     <title>Инвентарь</title>
   <style type="text/css">
-      input {
-          position: absolute;
+      #input_button {
           display: inline-block;
           -webkit-box-sizing: content-box;
           -moz-box-sizing: content-box;
           box-sizing: content-box;
           float: none;
           z-index: auto;
-          width: auto;
+          width: 135px;
           height: auto;
           cursor: pointer;
           opacity: 1;
@@ -39,13 +38,11 @@
           -webkit-transform-origin: 50% 50% 0;
           transform-origin: 50% 50% 0;
       }
-      input:hover:not(:disabled) {
+      #input_button:hover:not(:disabled) {
           cursor: pointer;
           background-color: #25A833;
       }
       div {
-          position: absolute;
-          left : 40%;
           display: inline-block;
           -webkit-box-sizing: content-box;
           -moz-box-sizing: content-box;
@@ -76,8 +73,8 @@
           transform-origin: 50% 50% 0;
       }
       table {
-          width: 100%;
           border: #ffffff;
+          color: white;
           border-collapse: collapse;
       }
       th {
@@ -91,12 +88,58 @@
           padding: 5px;
           border: 1px solid #ffffff;
       }
+      #pos1 {
+          position: absolute;
+          left: 13%;
+          top: 20%;
+      }
+      #pos2 {
+          position: absolute;
+          right: 13%;
+          top: 30%;
+      }
+      #pos3 {
+          position: absolute;
+          left: 40%
+      }
   </style>
 </head>
 <body>
-<form action="/inventory/new">
-  <div>
-  <table>
+<table id="pos1">
+  <tr>
+    <th>Деньги</th>
+  </tr>
+  <tr>
+    <td bgcolor="#0199d9">100$</td>
+  </tr>
+  <tr>
+    <td>" "</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <form action="/marketplace">
+        <input id="input_button" type="submit" value="Торговая площадка">
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <form action="/callboard">
+        <input id="input_button" type="submit" value="Доска объявлений">
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <form action="/">
+        <input id="input_button" type="submit" value="Выход">
+      </form>
+    </td>
+  </tr>
+</table>
+<!--<form action="/inventory/new">-->
+<div id="pos3">
+    <table>
     <tr>
       <th>Название</th>
       <th>Количество</th>
@@ -109,9 +152,26 @@
           <td><%= item.cost %></td>
         </tr>
     <% end %>
+    </table>
+</div>
+<div>
+  <table id="pos2">
+    <tr>
+      <th><label for="name">Перейти к площадке другого игрока</label></th>
+    </tr>
+    <tr>
+      <td bgcolor="#0199d9"><input type="text" name="name"></td>
+    </tr>
+    <tr>
+      <form action="/marketplace">
+        <td bgcolor="white">
+          <input id="input_button" type="submit" value="Перейти">
+        </td>
+      </form>
+    </tr>
   </table>
-  </div>
+</div>
   <!-- <p><input type="submit" value="Add New Item"></p> -->
-</form>
+<!--</form>-->
 </body>
 </html>

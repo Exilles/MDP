@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="RUBY_MODULE" version="4">
+  <component name="CompassSettings">
+    <option name="compassExecutableFilePath" value="D:/Programming Languages/Ruby24-x64/lib/ruby/gems/2.4.0/gems/compass-1.0.3/bin/compass" />
+  </component>
   <component name="ModuleRunConfigurationManager">
     <shared />
     <local />
@@ -9,6 +12,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="io-console (v0.4.6, ruby-2.4.1-p111) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="pg (v0.21.0, ruby-2.4.1-p111) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="sequel (v4.47.0, ruby-2.4.1-p111) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="sinatra (v2.0.0, ruby-2.4.1-p111) [gem]" level="application" />
   </component>
 </module>

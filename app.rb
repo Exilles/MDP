@@ -4,8 +4,7 @@ require 'item_store'
 require 'pg'
 require 'sequel'
 
-DB = Sequel.connect(:adapter=>'postgres', :host=>'localhost', :database=>'market', :user=>'admin', :password=>'111')
-store = ItemStore.new('item.yml')
+store = ItemStore.new('config.yml')
 
 get('/inventory') do
   @items = store.all
@@ -20,8 +19,16 @@ get('/registration') do
   erb :registration
 end
 
+get('/marketplace') do
+  erb :marketplace
+end
+
+get('/callboard') do
+  erb :callboard
+end
+
 post('/registration/accept') do
-  DB[:users].insert(:login => params['login'].to_s, :password => params['password'].to_s, :money => 100)
+
   redirect '/inventory'
 end
 
