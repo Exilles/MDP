@@ -1,5 +1,7 @@
-
-Sequel.migration do
+require 'sequel'
+require 'pg'
+DB = Sequel.connect(:adapter=>'postgres', :host=>'localhost', :database=>'market_db', :user=>'admin', :password=>'111')
+Sequel.extension :migration, :core_extensions do
  change do
    create_table (:Users) do
      primary_key :id
@@ -32,4 +34,6 @@ Sequel.migration do
 
 end
 
-
+Test = DB[:Users]
+Test.insert(:Login => 'admin', :Password => '111', :Money => 1000)
+puts "#{Test.count}"

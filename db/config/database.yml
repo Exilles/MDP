@@ -1,0 +1,10 @@
+ production: &production
+  adapter: postgres
+  host: localhost
+  encoding: unicode
+  database: market_db
+  username: admin
+  password: 111
+
+development:
+  <<: *production
