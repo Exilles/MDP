@@ -77,12 +77,24 @@
             -webkit-transform-origin: 50% 50% 0;
             transform-origin: 50% 50% 0;
         }
+        th {
+            font-size: 20px;
+            text-align: center;
+            background: #34c44b;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
 <div>
-    <form method="post" action="/registration/accept">
         <table>
+            <tr>
+                <th colspan="2">Регистрация</th>
+            </tr>
+            <tr>
+                <td colspan="2"><%= "-"*54 %></td>
+            </tr>
+            <form method="post" action="/registration/accept">
             <tr>
                 <td><label for="login">Введите логин</label></td>
                 <td><input type="text" name="login"></td>
@@ -92,15 +104,20 @@
                 <td><input type="password" name="password"></td>
             </tr>
             <tr>
-                <td><input id="button" type="submit" ></td>
+                <td colspan="2"><%= "-"*54 %></td>
+            </tr>
+            <tr>
                 <td>
+                    <input id="button" type="submit" value="Принять">
+                </td>
+            </form>
+                <td align="right">
                     <form action="/">
                         <input id="button" type="submit" value="Отменить">
                     </form>
                 </td>
             </tr>
         </table>
-    </form>
 </div>
 </body>
 </html>

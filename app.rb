@@ -4,6 +4,7 @@ require 'item_store'
 require 'pg'
 require 'sequel'
 
+DB = Sequel.connect(:adapter=>'postgres', :host=>'localhost', :database=>'market', :user=>'admin', :password=>'111')
 store = ItemStore.new('config.yml')
 
 get('/inventory') do
@@ -19,7 +20,7 @@ get('/registration') do
   erb :registration
 end
 
-get('/marketplace') do
+get('/marketplace/:name') do
   erb :marketplace
 end
 
@@ -27,9 +28,26 @@ get('/callboard') do
   erb :callboard
 end
 
-post('/registration/accept') do
+get('/') do
+  erb :login
+end
 
-  redirect '/inventory'
+post('/registration/accept') do
+  if params['login'] != "" && params['password'] != ""
+    DB[:'users'].insert(:login => params['login'], :password => params['password'], :money => 100)
+    redirect '/inventory'
+  else
+    redirect '/registration'
+  end
+end
+
+post('/inventory') do
+  # if params['login'] != "" && params['password'] != "" && DB[:users].where(:login => params['login'], :password => params['password'])
+  if DB[:users].where(:login => 'Dima', :password => '111')
+    redirect '/inventory'
+  else
+    redirect '/'
+  end
 end
 
 post('/inventory/create') do
@@ -41,6 +59,10 @@ post('/inventory/create') do
   redirect '/inventory/new'
 end
 
-get('/') do
-  erb :login
+post ('/marketplace/go') do
+  if params['name'] != ""
+    redirect '/marketplace/:name'
+  else
+    redirect '/inventory'
+  end
 end

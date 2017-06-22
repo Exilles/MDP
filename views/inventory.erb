@@ -155,21 +155,26 @@
     </table>
 </div>
 <div>
-  <table id="pos2">
-    <tr>
-      <th><label for="name">Перейти к площадке другого игрока</label></th>
-    </tr>
-    <tr>
-      <td bgcolor="#0199d9"><input type="text" name="name"></td>
-    </tr>
-    <tr>
-      <form action="/marketplace">
-        <td bgcolor="white">
-          <input id="input_button" type="submit" value="Перейти">
-        </td>
-      </form>
-    </tr>
-  </table>
+    <form method="post" action="/marketplace/go">
+        <table id="pos2">
+            <tr>
+                <th><label for="name">Перейти к площадке другого игрока</label></th>
+            </tr>
+            <tr>
+                <td bgcolor="#0199d9"><input type="text" name="name"></td>
+            </tr>
+            <tr>
+                <td bgcolor="white">
+                    <input id="input_button" type="submit" value="Перейти">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <a href="/marketplace/<%= params[:name] %>">Name</a>
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
   <!-- <p><input type="submit" value="Add New Item"></p> -->
 <!--</form>-->

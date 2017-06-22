@@ -77,35 +77,50 @@
             -webkit-transform-origin: 50% 50% 0;
             transform-origin: 50% 50% 0;
         }
+        th {
+            font-size: 20px;
+            text-align: center;
+            background: #34c44b;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
 <div>
 <table>
-    <tr>
-        <td><label for="login">Логин</label></td>
-        <td><input type="text" name="login"></td>
-    </tr>
-    <tr>
-        <td><label for="password">Пароль</label></td>
-        <td><input type="password" name="password"></td>
-    </tr>
+    <form method="post"  action="/inventory">
+        <tr>
+            <th colspan="2">Авторизация</th>
+        </tr>
+        <tr>
+            <td colspan="2"><%= "-"*42 %></td>
+        </tr>
+        <tr>
+            <td><label for="login">Логин</label></td>
+            <td><input type="text" name="login"></td>
+        </tr>
+        <tr>
+            <td><label for="password">Пароль</label></td>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><%= "-"*42 %></td>
+        </tr>
+    </form>
 </table>
 <center>
     <table>
         <tr>
             <td>
-                <form action="/inventory">
-                    <input id="button" type="submit" value="Войти">
-                </form>
+                <input id="button" type="submit" value="Войти">
             </td>
-            <td>
-                <form action="/registration">
-                    <input id="button" type="submit" value="Регистрация">
-                </form>
-            </td>
-        </tr>
-    </table>
+        <td>
+            <form action="/registration">
+                <input id="button" type="submit" value="Регистрация">
+            </form>
+        </td>
+    </tr>
+</table>
 </center>
 </div>
 </body>
