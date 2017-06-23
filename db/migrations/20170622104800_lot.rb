@@ -4,8 +4,8 @@ Sequel.migration do
       primary_key :id
       Integer :countLot
       Integer :price
-      Integer :user_id
-      Integer :ad_id
+      foreign_key :user_id
+      foreign_key :ad_id
     end
   end
 end

@@ -4,7 +4,7 @@ Sequel.migration do
       primary_key :id
       String :name
       Integer :countItem
-      Integer :user_id
+      foreign_key :user_id
     end
   end
 end

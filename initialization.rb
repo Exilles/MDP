@@ -10,17 +10,13 @@ require_relative 'db/Model/lot'
 require_relative 'db/Model/item'
 require_relative 'db/Model/user'
 
-test=DB[:users]
+newItem = Item.create(:name => 'smartphone')
 
-muser=test.where(:id => 1)
+usert = User[:login => 'Misha']
 
-item=DB[:items]
+usert.items
 
-itemt = item.where(:Name => 'phone')
-itemt.user = User[:login => 'Misha']
-
-
-
+usert.add_item(newItem)
 
 
 
