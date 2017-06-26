@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8' />
+    <title>Inventory</title>
+</head>
+<body>
+<h1>Inventory</h1>
+<table border="1">
+    <tr bgcolor="#d3d3d3" >
+        <td><b>Name</b></td>
+        <td><b>Count</b></td>
+        <td><b>Cost</b></td>
+    </tr>
+    <% @items.each do |item| %>
+        <tr>
+            <td><%= item.name %></td>
+            <td><%= item.count %></td>
+            <td><%= item.cost %></td>
+        </tr>
+    <% end %>
+</table>
+<input type="submite"
+<button><a href="/inventory/new">Add New Item</a></button>
+</body>
+</html>
