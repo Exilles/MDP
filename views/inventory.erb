@@ -147,9 +147,9 @@
     </tr>
     <% @items.each do |item| %>
         <tr>
-          <td><%= item.name %></td>
-          <td><%= item.count %></td>
-          <td><%= item.cost %></td>
+          <td><%= item.item_id %></td>
+          <td><%= item.count_item %></td>
+          <td><%= item.user_id %></td>
         </tr>
     <% end %>
     </table>
@@ -176,7 +176,7 @@
         </table>
     </form>
 </div>
-  <!-- <p><input type="submit" value="Add New Item"></p> -->
+  <!-- <p><input type="submit" value="Add New ItemYml"></p> -->
 <!--</form>-->
 </body>
 </html>

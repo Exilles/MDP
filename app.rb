@@ -1,15 +1,29 @@
 require 'sinatra'
-require 'item'
-require 'item_store'
 require 'pg'
 require 'sequel'
+require 'yaml'
+require 'erb'
 
-DB = Sequel.connect(:adapter=>'postgres', :host=>'localhost', :database=>'market', :user=>'admin', :password=>'111')
+DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
+
+require_relative 'lib/item_yml'
+require_relative 'lib/item_store'
+require_relative 'db/models/ad'
+require_relative 'db/models/lot'
+require_relative 'db/models/item'
+require_relative 'db/models/user'
+require_relative 'controls/login'
+require_relative 'controls/inventory'
+
 store = ItemStore.new('config.yml')
 
+enable :sessions
+
 get('/inventory') do
-  @items = store.all
+
+  @items = show(session['id'])
   erb :inventory
+
 end
 
 get('/inventory/new') do
@@ -34,17 +48,18 @@ end
 
 post('/registration/accept') do
   if params['login'] != "" && params['password'] != ""
-    DB[:'users'].insert(:login => params['login'], :password => params['password'], :money => 100)
+    registration(params['login'], params['password'])
     redirect '/inventory'
   else
     redirect '/registration'
   end
 end
 
-post('/inventory') do
-  # if params['login'] != "" && params['password'] != "" && DB[:users].where(:login => params['login'], :password => params['password'])
-  if DB[:users].where(:login => 'Dima', :password => '111')
-    redirect '/inventory'
+post('/login') do
+  @id = login(params['login'], params['password'])
+  if @id
+    session['id'] = @id
+    redirect to '/inventory'
   else
     redirect '/'
   end

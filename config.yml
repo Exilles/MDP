@@ -1,81 +1,61 @@
 ---
-1: !ruby/object:Item
+1: !ruby/object:ItemYml
   name: Банан
   cost: '10'
-  id: 1
-2: !ruby/object:Item
+2: !ruby/object:ItemYml
   name: Яблоко
   cost: '8'
-  id: 2
-3: !ruby/object:Item
+3: !ruby/object:ItemYml
   name: Мандарин
   cost: '7'
-  id: 3
-4: !ruby/object:Item
+4: !ruby/object:ItemYml
   name: Морковь
   cost: '5'
-  id: 4
-5: !ruby/object:Item
+5: !ruby/object:ItemYml
   name: Посох
   cost: '120'
-  id: 5
-6: !ruby/object:Item
+6: !ruby/object:ItemYml
   name: Меч
   cost: '78'
-  id: 6
-7: !ruby/object:Item
+7: !ruby/object:ItemYml
   name: Катана
   cost: '88'
-  id: 7
-8: !ruby/object:Item
+8: !ruby/object:ItemYml
   name: Жезл
   cost: '123'
-  id: 8
-9: !ruby/object:Item
+9: !ruby/object:ItemYml
   name: Глобус
   cost: '66'
-  id: 9
-10: !ruby/object:Item
+10: !ruby/object:ItemYml
   name: Плащ
   cost: '65'
-  id: 10
-11: !ruby/object:Item
+11: !ruby/object:ItemYml
   name: Штаны
   cost: '56'
-  id: 11
-12: !ruby/object:Item
+12: !ruby/object:ItemYml
   name: Кинжал
   cost: '45'
-  id: 12
-13: !ruby/object:Item
+13: !ruby/object:ItemYml
   name: Шляпа
   cost: '34'
-  id: 13
-14: !ruby/object:Item
+14: !ruby/object:ItemYml
   name: Каска
   cost: '22'
-  id: 14
-15: !ruby/object:Item
+15: !ruby/object:ItemYml
   name: Шлем
   cost: '39'
-  id: 15
-16: !ruby/object:Item
+16: !ruby/object:ItemYml
   name: Амулет
   cost: '145'
-  id: 16
-17: !ruby/object:Item
+17: !ruby/object:ItemYml
   name: Кольцо
   cost: '98'
-  id: 17
-18: !ruby/object:Item
+18: !ruby/object:ItemYml
   name: Сапоги
   cost: '19'
-  id: 18
-19: !ruby/object:Item
+19: !ruby/object:ItemYml
   name: Лук
   cost: '100'
-  id: 19
-20: !ruby/object:Item
+20: !ruby/object:ItemYml
   name: Серьги
   cost: '244'
-  id: 20
