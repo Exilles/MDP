@@ -14,13 +14,12 @@
     </tr>
     <% @items.each do |item| %>
         <tr>
-            <td><%= item.name %></td>
-            <td><%= item.count %></td>
-            <td><%= item.cost %></td>
+
+            <td><%= item.count_item %></td>
         </tr>
     <% end %>
 </table>
-<input type="submite"
+<input type="submit">
 <button><a href="/inventory/new">Add New Item</a></button>
 </body>
 </html>

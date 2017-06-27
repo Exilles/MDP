@@ -1,6 +1,6 @@
 require 'yaml/store'
 
-class ItemStore
+class Item
 
   def initialize(file_name)
     @store = YAML::Store.new(file_name)
