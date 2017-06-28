@@ -1,3 +1,4 @@
+require 'nokogiri'
 require 'sinatra'
 require 'pg'
 require 'sequel'
@@ -15,38 +16,39 @@ require_relative 'db/models/user'
 require_relative 'controls/login'
 require_relative 'controls/inventory'
 
-store = ItemStore.new('config.yml')
+store = ItemStore.new('config.yml').all
 
 enable :sessions
 
 get('/inventory') do
 
-  @items = show(session['id'])
+  content_type 'text/xml'
+  @xml = show(store, params['id'])
   erb :inventory
 
 end
 
-get('/inventory/new') do
-    erb :new
+get '/inventory/new' do
+  erb :new
 end
 
-get('/registration') do
+get '/registration' do
   erb :registration
 end
 
-get('/marketplace/:name') do
+get '/marketplace/:name' do
   erb :marketplace
 end
 
-get('/callboard') do
+get '/callboard' do
   erb :callboard
 end
 
-get('/') do
+get '/' do
   erb :login
 end
 
-post('/registration/accept') do
+post '/registration/accept' do
   if params['login'] != "" && params['password'] != ""
     registration(params['login'], params['password'])
     redirect '/inventory'
@@ -55,7 +57,7 @@ post('/registration/accept') do
   end
 end
 
-post('/login') do
+post '/login' do
   @id = login(params['login'], params['password'])
   if @id
     session['id'] = @id
@@ -65,7 +67,7 @@ post('/login') do
   end
 end
 
-post('/inventory/create') do
+post '/inventory/create' do
   @item = Item.new
   @item.name = params['name']
   @item.count = params['count']
@@ -74,7 +76,7 @@ post('/inventory/create') do
   redirect '/inventory/new'
 end
 
-post ('/marketplace/go') do
+post '/marketplace/go' do
   if params['name'] != ""
     redirect '/marketplace/:name'
   else

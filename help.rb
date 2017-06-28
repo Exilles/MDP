@@ -101,6 +101,7 @@ require_relative 'db/models/user'
 # User.association_join(:items).each {|row| p row}
 
 require 'yaml'
+require 'builder'
 
 require_relative 'controls/login'
 require_relative 'controls/inventory'
@@ -110,11 +111,30 @@ require_relative 'lib/item_store'
 
 require_relative 'lib/item_store'
 
-config = ItemStore.new('config.yml')
+store = ItemStore.new('config.yml').all
 
-store = config.all
-items = []
+xml = Builder::XmlMarkup.new( :target => $stdout, :indent => 2 )
 
-items.each do |item|
-  item << {"name", store[].name, "count_item", User[:id] => , "cost", store[].cost}
-end
+xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
+
+# xml.inventory {
+#   Item.where(:user_id => 1).each do |item|
+#       xml.item {
+#         xml.name store[item.item_id - 1].name
+#         xml.count_item item.count_item
+#         xml.cost store[item.item_id - 1].cost
+#       }
+#   end
+# }
+
+xml.inventory {
+  Item.where(:user_id => 1).each do |item|
+    xml.item(:name => store[item.item_id - 1].name, :count => item.count_item, :cost => store[item.item_id - 1].cost)
+  end
+}
+
+# Item.where(:user_id => 1).each do |item|
+#   p store[item.item_id].name
+#   p item.count_item
+#   p store[item.item_id].cost
+# end

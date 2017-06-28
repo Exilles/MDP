@@ -1,61 +1,61 @@
 ---
 1: !ruby/object:ItemYml
-  name: Банан
+  name: Banana
   cost: '10'
 2: !ruby/object:ItemYml
-  name: Яблоко
+  name: Apple
   cost: '8'
 3: !ruby/object:ItemYml
-  name: Мандарин
+  name: Mandarin
   cost: '7'
 4: !ruby/object:ItemYml
-  name: Морковь
+  name: Carrot
   cost: '5'
 5: !ruby/object:ItemYml
-  name: Посох
+  name: Staff
   cost: '120'
 6: !ruby/object:ItemYml
-  name: Меч
+  name: Sword
   cost: '78'
 7: !ruby/object:ItemYml
-  name: Катана
+  name: Katana
   cost: '88'
 8: !ruby/object:ItemYml
-  name: Жезл
+  name: Wand
   cost: '123'
 9: !ruby/object:ItemYml
-  name: Глобус
+  name: Spear
   cost: '66'
 10: !ruby/object:ItemYml
-  name: Плащ
+  name: Cloak
   cost: '65'
 11: !ruby/object:ItemYml
-  name: Штаны
+  name: Pants
   cost: '56'
 12: !ruby/object:ItemYml
-  name: Кинжал
+  name: Dagger
   cost: '45'
 13: !ruby/object:ItemYml
-  name: Шляпа
+  name: Hat
   cost: '34'
 14: !ruby/object:ItemYml
-  name: Каска
+  name: Belt
   cost: '22'
 15: !ruby/object:ItemYml
-  name: Шлем
+  name: Helmet
   cost: '39'
 16: !ruby/object:ItemYml
-  name: Амулет
+  name: Amulet
   cost: '145'
 17: !ruby/object:ItemYml
-  name: Кольцо
+  name: Ring
   cost: '98'
 18: !ruby/object:ItemYml
-  name: Сапоги
+  name: Boots
   cost: '19'
 19: !ruby/object:ItemYml
-  name: Лук
+  name: Bow
   cost: '100'
 20: !ruby/object:ItemYml
-  name: Серьги
+  name: Earrings
   cost: '244'
