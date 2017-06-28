@@ -3,6 +3,9 @@ require 'pg'
 require 'yaml'
 require 'erb'
 require 'sinatra'
+require 'nokogiri'
+require 'rexml/document'
+require 'yaml/store'
 
 DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
 
@@ -14,7 +17,7 @@ require_relative 'db/Model/user'
 require_relative 'lib/ads_def'
 require_relative 'lib/lot_def'
 require_relative 'lib/user_def'
-require_relative 'lib/item_store'
+require_relative 'lib/item_def'
 
 enable :sessions
 
@@ -37,10 +40,14 @@ end
 
 #инвентарь пользователя
 get '/inventory' do
+
+  content_type 'text/xml'
   session['id']
   @user = User.new
-  @item = @user.get_user_inventory(session['id'])
-  erb :inventory
+  @xml = @user.get_user_inventory(session['id'])
+  #@userinventory = File.open("Inventory.xml", "r:UTF-8")
+  erb:inventory
+  #@userinventory.close
 end
 
 #html отображения для лотов
