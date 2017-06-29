@@ -40,14 +40,11 @@ end
 
 #инвентарь пользователя
 get '/inventory' do
-
-  content_type 'text/xml'
+  content_type 'text'
   session['id']
   @user = User.new
   @xml = @user.get_user_inventory(session['id'])
-  #@userinventory = File.open("Inventory.xml", "r:UTF-8")
-  erb:inventory
-  #@userinventory.close
+  erb @xml
 end
 
 #html отображения для лотов
@@ -60,11 +57,22 @@ patch ('/lot/edit') do
 end
 
 get ('/lot/show') do
-  erb :show_lot
+  content_type 'text'
+  session['id']
+  @lot = Lot.new
+  @xml = @lot.get_user_lots(session['id'])
+  erb @xml
 end
 
-post ('lot/create') do
+get ('/lot/create') do
 
+  @lot=Lot.new
+  session['id']
+  if (session['id']!=nil && params[:item_id]!=nil && params[:price]!=nil && params[:count_lot]!=nil)
+    @lot.create_new_lot(session['id'], params[:item_id], params[:price], params[:count_lot])
+  else
+    redirect '/lot/show'
+  end
 end
 
 delete ('lot/delete') do
