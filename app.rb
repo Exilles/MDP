@@ -15,6 +15,7 @@ require_relative 'db/models/item'
 require_relative 'db/models/user'
 require_relative 'controls/login'
 require_relative 'controls/inventory'
+require_relative 'controls/lots'
 
 store = ItemStore.new('config.yml').all
 
@@ -22,30 +23,66 @@ enable :sessions
 
 get('/inventory') do
 
-  content_type 'text/xml'
-  @xml = show(store, params['id'])
-  erb :inventory
+  content_type 'text'
+  erb show_inventory(store, params['id'])
 
 end
 
 get '/inventory/new' do
+
   erb :new
+
 end
 
 get '/registration' do
+
   erb :registration
+
+end
+
+get '/lots' do
+
+  content_type 'text'
+  erb show_lots(store, params['id'])
+
 end
 
 get '/marketplace/:name' do
+
   erb :marketplace
+
 end
 
 get '/callboard' do
+
   erb :callboard
+
 end
 
 get '/' do
+
   erb :login
+
+end
+
+get '/lots/add/' do
+
+  if add_lot(params['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i)
+    "Lot added :)"
+  else
+    "Lot NOT added :("
+  end
+
+end
+
+get '/lots/return/' do
+
+  if return_lot(params['id'].to_i)
+    "Lot return :)"
+  else
+    "Lot NOT return :("
+  end
+
 end
 
 post '/registration/accept' do

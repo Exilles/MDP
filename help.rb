@@ -1,24 +1,31 @@
+require 'pg'
+require 'sequel'
+require 'yaml'
+require 'erb'
+require 'benchmark'
+require 'nokogiri'
+
+DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
+
+require_relative 'lib/item_yml'
+require_relative 'lib/item_store'
+require_relative 'db/models/ad'
+require_relative 'db/models/lot'
+require_relative 'db/models/item'
+require_relative 'db/models/user'
+require_relative 'controls/login'
+require_relative 'controls/inventory'
+require_relative 'controls/lots'
+
 # ----- КОМАНДЫ ТЕРМИНАЛА -----
 # sequel -e production -m db/migrations/ db/config/database.yml - запуск миграций
 # psql -h localhost market_db admin - подключение к БД через терминал
 # /dt - посмотреть все таблицы БД
 # select * from users; - посмотреть все данные таблицы 'users'
 # drop table users; - удалить таблицу 'users'
-
-# ----- ПОДКЛЮЧЕНИЕ НЕОБХОДИМЫХ БИБЛИОТЕК -----
-require 'sequel'
-require 'pg'
-require 'yaml'
-require 'erb'
-
-# ----- ПОДКЛЮЧЕНИЕ К БД -----
-DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
-
-# ----- ДОБАВЛЕНИЕ МОДУЛЕЙ -----
-require_relative 'db/models/ad'
-require_relative 'db/models/lot'
-require_relative 'db/models/item'
-require_relative 'db/models/user'
+# rvm @global do gem install 'name' - чёткая установка гема для пацанчиков
+# alter sequence test_id_seq restart;
+# select setval('test_id_seq', 1, false);
 
 # ----- СОЗДАНИЕ ЭКЗЕМПЛЯРОВ ТАБЛИЦ БД -----
 # user=DB[:users]
@@ -27,7 +34,7 @@ require_relative 'db/models/user'
 # lot=DB[:lots]
 
 # ----- ВСТАВКА ЗАПИСИ -----
-# ItemYml.insert(:name => "Kiwi", :countItem => 3, :user_id => 1) - добавление записи в таблицу 'items'
+# Item.insert(:name => "Kiwi", :countItem => 3, :user_id => 1) - добавление записи в таблицу 'items'
 
 # ----- УДАЛЕНИЕ ЗАПИСИ -----
 # ItemYml.where(:name => 'Kiwi').delete - удалениеие записи из таблицы 'items' с именем 'Kiwi'
@@ -88,7 +95,7 @@ require_relative 'db/models/user'
 # item.save
 # ---------------------------------------------------
 
-# item. # array of albums
+# item.albums # array of albums
 # album.artist # Artist instance or nil
 #
 # artist.add_album(album) # associate album to artist
@@ -100,41 +107,49 @@ require_relative 'db/models/user'
 
 # User.association_join(:items).each {|row| p row}
 
-require 'yaml'
-require 'builder'
-
-require_relative 'controls/login'
-require_relative 'controls/inventory'
-
-require_relative 'lib/item_yml'
-require_relative 'lib/item_store'
-
-require_relative 'lib/item_store'
-
 store = ItemStore.new('config.yml').all
 
-xml = Builder::XmlMarkup.new( :target => $stdout, :indent => 2 )
-
-xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
-
+# xml = Builder::XmlMarkup.new( :target => $stdout, :indent => 2 )
+#
+# xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
+#
 # xml.inventory {
 #   Item.where(:user_id => 1).each do |item|
-#       xml.item {
-#         xml.name store[item.item_id - 1].name
-#         xml.count_item item.count_item
-#         xml.cost store[item.item_id - 1].cost
-#       }
+#     xml.item(:name => store[item.item_id - 1].name, :count => item.count_item, :cost => store[item.item_id - 1].cost)
 #   end
 # }
 
-xml.inventory {
-  Item.where(:user_id => 1).each do |item|
-    xml.item(:name => store[item.item_id - 1].name, :count => item.count_item, :cost => store[item.item_id - 1].cost)
-  end
-}
+# n = 1000
+# Benchmark.bm do |x|
+#   x.report { n.times do ;
+#   Nokogiri::XML::Builder.new {|xml|
+#     xml.inventory do
+#       Item.where(:user_id => 1).each do |item|
+#         xml.item :name => store[item.item_id - 1].name, :count => item.count_item, :cost => store[item.item_id - 1].cost
+#       end
+#     end
+#   }.to_xml
+#   end }
+# end
+
+#{ 'здесь был Вася' }
 
 # Item.where(:user_id => 1).each do |item|
 #   p store[item.item_id].name
 #   p item.count_item
 #   p store[item.item_id].cost
 # end
+
+# @i = 1
+# begin
+#   Lot.insert(:count_lot => rand(1..10), :price => rand(1..100), :user_id => 2, :item_id => @i, :ad_id => @i )
+#   @i = @i + 1
+# end while @i < 5
+
+# @i = 5
+# begin
+#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 2)
+#   @i = @i + 1
+# end while @i < 8
+
+
