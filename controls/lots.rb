@@ -29,7 +29,8 @@ end
 
 def return_lot (id)
 
-  Item.where(:user_id => Lot[:id => id].user_id, :item_id => Lot[:id => id].item_id).update(:count_item => Item[:user_id => Lot[:id => id].user_id, :item_id => Lot[:id => id].item_id].count_item + Lot[:id => id].count_lot)
+  lot = Lot[:id => id]
+  Item.where(:user_id => lot.user_id, :item_id => lot.item_id).update(:count_item => Item[:user_id => lot.user_id, :item_id => lot.item_id].count_item + lot.count_lot)
   Lot.where(:id => id).delete
 
 end

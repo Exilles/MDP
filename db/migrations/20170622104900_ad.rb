@@ -4,6 +4,7 @@ Sequel.migration do
       primary_key :id
       String :name
       String :description
+      Integer :lot_id
     end
   end
 end

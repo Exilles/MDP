@@ -3,7 +3,6 @@ require 'sequel'
 require 'yaml'
 require 'erb'
 require 'benchmark'
-require 'nokogiri'
 
 DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
 
@@ -26,6 +25,7 @@ require_relative 'controls/lots'
 # rvm @global do gem install 'name' - чёткая установка гема для пацанчиков
 # alter sequence test_id_seq restart;
 # select setval('test_id_seq', 1, false);
+# sequel -e production -m db/migrations/ db/config/database.yml
 
 # ----- СОЗДАНИЕ ЭКЗЕМПЛЯРОВ ТАБЛИЦ БД -----
 # user=DB[:users]
@@ -146,10 +146,8 @@ store = ItemStore.new('config.yml').all
 #   @i = @i + 1
 # end while @i < 5
 
-# @i = 5
+# @i = 1
 # begin
-#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 2)
+#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 1)
 #   @i = @i + 1
-# end while @i < 8
-
-
+# end while @i < 14

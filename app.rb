@@ -1,4 +1,3 @@
-require 'nokogiri'
 require 'sinatra'
 require 'pg'
 require 'sequel'
@@ -16,15 +15,16 @@ require_relative 'db/models/user'
 require_relative 'controls/login'
 require_relative 'controls/inventory'
 require_relative 'controls/lots'
+require_relative 'controls/ads'
 
 store = ItemStore.new('config.yml').all
 
 enable :sessions
 
-get('/inventory') do
+get('/inventory/') do
 
   content_type 'text'
-  erb show_inventory(store, params['id'])
+  erb show_inventory(store, params['user_id'])
 
 end
 
@@ -40,10 +40,33 @@ get '/registration' do
 
 end
 
-get '/lots' do
+get '/lots/' do
 
   content_type 'text'
-  erb show_lots(store, params['id'])
+  erb show_lots(store, params['user_id'])
+
+end
+
+get '/ads' do
+
+  content_type 'text'
+  erb show_ads
+
+end
+
+get '/ads/add/' do
+
+  if add_ad(params['user_id'].to_i, params['lot_id'].to_i, params['description'])
+    "Ad added :)"
+  else
+    "Ad NOT added :("
+  end
+
+end
+
+get '/ads/delete/' do
+
+  delete_add(params['ad_id'])
 
 end
 
