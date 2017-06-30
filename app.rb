@@ -24,7 +24,7 @@ enable :sessions
 get('/inventory/') do
 
   content_type 'text'
-  erb show_inventory(store, params['user_id'])
+  erb show_inventory(store, params['user_id'].to_i)
 
 end
 
@@ -37,36 +37,6 @@ end
 get '/registration' do
 
   erb :registration
-
-end
-
-get '/lots/' do
-
-  content_type 'text'
-  erb show_lots(store, params['user_id'])
-
-end
-
-get '/ads' do
-
-  content_type 'text'
-  erb show_ads
-
-end
-
-get '/ads/add/' do
-
-  if add_ad(params['user_id'].to_i, params['lot_id'].to_i, params['description'])
-    "Ad added :)"
-  else
-    "Ad NOT added :("
-  end
-
-end
-
-get '/ads/delete/' do
-
-  delete_add(params['ad_id'])
 
 end
 
@@ -88,23 +58,47 @@ get '/' do
 
 end
 
+get '/lots/' do
+
+  content_type 'text'
+  erb show_lots(store, params['user_id'].to_i)
+
+end
+
 get '/lots/add/' do
 
-  if add_lot(params['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i)
-    "Lot added :)"
-  else
-    "Lot NOT added :("
-  end
+  add_lot(params['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i)
 
 end
 
 get '/lots/return/' do
 
-  if return_lot(params['id'].to_i)
-    "Lot return :)"
-  else
-    "Lot NOT return :("
-  end
+  return_lot(params['user_id'].to_i,params['lot_id'].to_i)
+
+end
+
+get '/lots/buy/' do
+
+  buy_lot(params['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i)
+
+end
+
+get '/ads' do
+
+  content_type 'text'
+  erb show_ads
+
+end
+
+get '/ads/add/' do
+
+  add_ad(params['user_id'].to_i, params['lot_id'].to_i, params['description'])
+
+end
+
+get '/ads/delete/' do
+
+  delete_add(params['ad_id'].to_i)
 
 end
 

@@ -109,6 +109,8 @@ require_relative 'controls/lots'
 
 store = ItemStore.new('config.yml').all
 
+# store = YAML::Store.new('config.yml')
+
 # xml = Builder::XmlMarkup.new( :target => $stdout, :indent => 2 )
 #
 # xml.instruct! :xml, :version => "1.0", :encoding => "UTF-8"
@@ -146,8 +148,24 @@ store = ItemStore.new('config.yml').all
 #   @i = @i + 1
 # end while @i < 5
 
-# @i = 1
+# @i = 9
 # begin
-#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 1)
+#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 2)
 #   @i = @i + 1
-# end while @i < 14
+# end while @i < 21
+
+# Lot.where(:user_id => 1).each do |lot|
+#   p store[Item[:id => lot.item_id].item_id - 1].name
+# end
+
+lot = Lot[:id => 13]
+if 9 <= lot.count_lot && lot.user_id != 1
+  item_sell = Item[:id => lot.item_id, :user_id => lot.user_id]
+  p item_sell
+  # if count != item_sell.count_item
+  #   lot.update(:count_lot => lot.count_lot - count)
+  # else
+  #   lot.delete
+  # end
+end
+

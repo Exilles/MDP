@@ -1,5 +1,5 @@
 class ItemYml
 
-  attr_accessor :name, :cost
+  attr_accessor :name, :cost, :id
 
 end

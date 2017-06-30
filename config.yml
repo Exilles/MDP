@@ -2,60 +2,80 @@
 1: !ruby/object:ItemYml
   name: Banana
   cost: '10'
+  id: 1
 2: !ruby/object:ItemYml
   name: Apple
   cost: '8'
+  id: 2
 3: !ruby/object:ItemYml
   name: Mandarin
   cost: '7'
+  id: 3
 4: !ruby/object:ItemYml
   name: Carrot
   cost: '5'
+  id: 4
 5: !ruby/object:ItemYml
   name: Staff
   cost: '120'
+  id: 5
 6: !ruby/object:ItemYml
   name: Sword
   cost: '78'
+  id: 6
 7: !ruby/object:ItemYml
   name: Katana
   cost: '88'
+  id: 7
 8: !ruby/object:ItemYml
   name: Wand
   cost: '123'
+  id: 8
 9: !ruby/object:ItemYml
   name: Spear
   cost: '66'
+  id: 9
 10: !ruby/object:ItemYml
   name: Cloak
   cost: '65'
+  id: 10
 11: !ruby/object:ItemYml
   name: Pants
   cost: '56'
+  id: 11
 12: !ruby/object:ItemYml
   name: Dagger
   cost: '45'
+  id: 12
 13: !ruby/object:ItemYml
   name: Hat
   cost: '34'
+  id: 13
 14: !ruby/object:ItemYml
   name: Belt
   cost: '22'
+  id: 14
 15: !ruby/object:ItemYml
   name: Helmet
   cost: '39'
+  id: 15
 16: !ruby/object:ItemYml
   name: Amulet
   cost: '145'
+  id: 16
 17: !ruby/object:ItemYml
   name: Ring
   cost: '98'
+  id: 17
 18: !ruby/object:ItemYml
   name: Boots
   cost: '19'
+  id: 18
 19: !ruby/object:ItemYml
   name: Bow
   cost: '100'
+  id: 19
 20: !ruby/object:ItemYml
   name: Earrings
   cost: '244'
+  id: 20
