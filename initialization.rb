@@ -29,7 +29,6 @@ end
 post '/login' do
   @user = User.new
   @user.id  = @user.authorization(params['login'], params['password'])
-
   if @user.id
     session['id']= @user.id
     redirect to ('/inventory')
@@ -48,36 +47,54 @@ get '/inventory' do
 end
 
 #html отображения для лотов
-get ('/lot/new') do
- erb :new_lot
+get ('/lot/return') do
+  session['id']
+  @lot = Lot.new
+  @lot.return_lot(params['id'], session['id'])
+  'Лот успешно возвращен'
 end
 
 patch ('/lot/edit') do
-  erb :edit_lot
+  session['id']
 end
 
 get ('/lot/show') do
   content_type 'text'
-  session['id']
   @lot = Lot.new
-  @xml = @lot.get_user_lots(session['id'])
+  @xml = @lot.get_user_lots(params[:id])
   erb @xml
 end
 
-get ('/lot/create') do
-
+get ('/lot/add') do
   @lot=Lot.new
   session['id']
   if (session['id']!=nil && params[:item_id]!=nil && params[:price]!=nil && params[:count_lot]!=nil)
-    @lot.create_new_lot(session['id'], params[:item_id], params[:price], params[:count_lot])
+    if @lot.create_new_lot(session['id'], params[:item_id], params[:price], params[:count_lot])
+      'Лот успешно добавлен'
+     else
+      'Ошибка ввода данных'
+    end
   else
-    redirect '/lot/show'
+    'Ошибка ввода данных'
   end
 end
 
-delete ('lot/delete') do
-  erb :destroy_lot
+get ('/lot/buy') do
+  @lot = Lot.new
+  session['id']
+  if @lot.buy_lot(params['lot_id'].to_i, params['count'].to_i, session['id'])
+    'Товар успешно приобретен'
+  else
+    'Ошибка покупки товара'
+  end
 end
+
+
+get ('/lot/delete') do
+  @lot = Lot.new
+  @lot.delete_lot(params['id'], session['id'])
+end
+
 
 
 #html отображения для объявлений
@@ -90,15 +107,25 @@ patch ('/ad/edit') do
 end
 
 get ('/ad/show') do
-  erb :show_ad
+  content_type 'text'
+  session['id']
+  @ad = Ad.new
+  @ad.show_ads()
 end
 
-post ('ad/create') do
-
+get ('/ad/add') do
+  @ad = Ad.new
+  if  @ad.add_ad(session['id'], params['lot_id'], params['description'], params['name'])
+    'Объявление успешно выставленно'
+  else
+    'Ошибка выставления объявления'
+  end
 end
 
-delete ('ad/delete') do
-  erb :destroy_ad
+delete ('/ad/delete') do
+  @ad  = Ad.new
+  session['id']
+  @ad.delete_add(session['id'], params['id'])
 end
 
 

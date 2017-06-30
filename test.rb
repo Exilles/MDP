@@ -59,7 +59,7 @@ require_relative 'lib/item_def'
 # end
 # xml << "</inventory>"
 
-# all_items = Item.new('item.yml').all
+all_items = Item.new('item.yml').all
 # #
 # # puts all_items[Item[:id => 1002].item_id].name
 # Lot.where(:user_id => 1).each do |lot|
@@ -67,4 +67,3 @@ require_relative 'lib/item_def'
 #
 # end
 
-Lot.insert()
