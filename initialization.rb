@@ -60,8 +60,13 @@ end
 
 get ('/lot/show') do
   content_type 'text'
+  session['id']
   @lot = Lot.new
-  @xml = @lot.get_user_lots(params[:id])
+  if params['id'] != nil
+   @xml = @lot.get_user_lots(params['id'])
+  else
+   @xml = @lot.get_user_lots(session['id'])
+  end
   erb @xml
 end
 
@@ -115,19 +120,24 @@ end
 
 get ('/ad/add') do
   @ad = Ad.new
-  if  @ad.add_ad(session['id'], params['lot_id'], params['description'], params['name'])
+  if  @ad.add_ad(session['id'], params['lot_id'])
     'Объявление успешно выставленно'
   else
     'Ошибка выставления объявления'
   end
 end
 
-delete ('/ad/delete') do
+get ('/ad/delete') do
   @ad  = Ad.new
   session['id']
   @ad.delete_add(session['id'], params['id'])
 end
 
+get ('/ad/show/filter') do
+  content_type 'text'
+  @ad = Ad.new
+  @ad.filter(params['name'], params['price'].to_i, params['count'].to_i)
+end
 
 # usert.items
 #
