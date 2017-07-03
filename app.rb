@@ -21,16 +21,21 @@ store = ItemStore.new('config.yml').all
 
 enable :sessions
 
-get('/inventory/') do
+get '/' do
 
-  content_type 'text'
-  erb show_inventory(store, params['user_id'].to_i)
+  erb :login
 
 end
 
-get '/inventory/new' do
+post '/login' do
 
-  erb :new
+  user_id = login(params['login'], params['password'])
+  if user_id
+    session['user_id'] = user_id
+    redirect to '/inventory'
+  else
+    redirect '/'
+  end
 
 end
 
@@ -40,48 +45,53 @@ get '/registration' do
 
 end
 
-get '/marketplace/:name' do
+post '/registration/accept' do
 
-  erb :marketplace
-
-end
-
-get '/callboard' do
-
-  erb :callboard
-
-end
-
-get '/' do
-
-  erb :login
+  if params['login'] != "" && params['password'] != ""
+    registration(params['login'], params['password'])
+    redirect '/inventory'
+  else
+    redirect '/registration'
+  end
 
 end
 
-get '/lots/' do
+get('/inventory') do
 
   content_type 'text'
-  erb show_lots(store, params['user_id'].to_i)
+  erb show_inventory(store, session['user_id'])
 
 end
 
-get '/lots/add/' do
+get '/lots' do
 
-  add_lot(params['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i)
+  content_type 'text'
+  if !params['user_id']
+    erb show_lots(store, session['user_id'].to_i)
+  else
+    erb show_lots(store, params['user_id'].to_i)
+  end
+
+end
+
+get '/lots/add' do
+
+  add_lot(session['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i, store[0].cost.to_i)
 
 end
 
-get '/lots/return/' do
+get '/lots/return' do
 
-  return_lot(params['user_id'].to_i,params['lot_id'].to_i)
+  return_lot(session['user_id'].to_i, params['lot_id'].to_i)
+
+end
+
+get '/lots/buy' do
+
+  buy_lot(session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i)
 
 end
 
-get '/lots/buy/' do
-
-  buy_lot(params['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i)
-
-end
 
 get '/ads' do
 
@@ -90,50 +100,21 @@ get '/ads' do
 
 end
 
-get '/ads/add/' do
+get '/ads/add' do
 
-  add_ad(params['user_id'].to_i, params['lot_id'].to_i, params['description'])
-
-end
-
-get '/ads/delete/' do
-
-  delete_add(params['ad_id'].to_i)
+  add_ad(store, session['user_id'].to_i, params['lot_id'].to_i)
 
 end
 
-post '/registration/accept' do
-  if params['login'] != "" && params['password'] != ""
-    registration(params['login'], params['password'])
-    redirect '/inventory'
-  else
-    redirect '/registration'
-  end
+get '/ads/delete' do
+
+  delete_ad(session['user_id'].to_i, params['ad_id'].to_i)
+
 end
 
-post '/login' do
-  @id = login(params['login'], params['password'])
-  if @id
-    session['id'] = @id
-    redirect to '/inventory'
-  else
-    redirect '/'
-  end
-end
+get ('/ads/filter') do
 
-post '/inventory/create' do
-  @item = Item.new
-  @item.name = params['name']
-  @item.count = params['count']
-  @item.cost = params['cost']
-  store.save(@item)
-  redirect '/inventory/new'
-end
+  content_type 'text'
+  filter(params['name'], params['price'].to_i, params['count'].to_i)
 
-post '/marketplace/go' do
-  if params['name'] != ""
-    redirect '/marketplace/:name'
-  else
-    redirect '/inventory'
-  end
 end

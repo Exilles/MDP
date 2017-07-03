@@ -1,7 +1,8 @@
 def login(login, password)
 
-    if  User.where(:login => login, :password => password).any?
-      User[:login => login, :password => password].id
+  user = User[:login => login, :password => password]
+    if  user
+      user.id
     else
       false
     end

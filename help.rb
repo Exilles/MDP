@@ -123,14 +123,27 @@ store = ItemStore.new('config.yml').all
 
 # n = 1000
 # Benchmark.bm do |x|
-#   x.report { n.times do ;
-#   Nokogiri::XML::Builder.new {|xml|
-#     xml.inventory do
-#       Item.where(:user_id => 1).each do |item|
-#         xml.item :name => store[item.item_id - 1].name, :count => item.count_item, :cost => store[item.item_id - 1].cost
-#       end
-#     end
-#   }.to_xml
+#   x.report { n.times do
+#     user_sell =  User[:id => 1]
+#     user_sell.update(:money => user_sell.money + 0 * 1)
+#   end }
+# end
+#
+# n = 1000
+# Benchmark.bm do |x|
+#   x.report { n.times do
+#     User[:id => 1].update(:money => User[:id => 1].money + 0 * 1)
+#   end }
+# end
+
+# n = 1
+# Benchmark.bm do |x|
+#   x.report { n.times do
+#     item_id = 12
+#     user_id = 1
+#     count = 1
+#     item = Item[:user_id => user_id, :item_id => item_id]
+#     item.update(:count_item => item.count_item - count)
 #   end }
 # end
 
@@ -148,24 +161,12 @@ store = ItemStore.new('config.yml').all
 #   @i = @i + 1
 # end while @i < 5
 
-# @i = 9
+# @i = 21
 # begin
-#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 2)
+#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 1)
 #   @i = @i + 1
-# end while @i < 21
+# end while @i < 1021
 
 # Lot.where(:user_id => 1).each do |lot|
 #   p store[Item[:id => lot.item_id].item_id - 1].name
 # end
-
-lot = Lot[:id => 13]
-if 9 <= lot.count_lot && lot.user_id != 1
-  item_sell = Item[:id => lot.item_id, :user_id => lot.user_id]
-  p item_sell
-  # if count != item_sell.count_item
-  #   lot.update(:count_lot => lot.count_lot - count)
-  # else
-  #   lot.delete
-  # end
-end
-
