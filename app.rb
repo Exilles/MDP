@@ -3,6 +3,9 @@ require 'pg'
 require 'sequel'
 require 'yaml'
 require 'erb'
+require 'thread'
+
+configure { set :server, :puma }
 
 DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
 
@@ -29,7 +32,7 @@ end
 
 post '/login' do
 
-  user_id = login(params['login'], params['password'])
+  user_id = login params['login'], params['password']
   if user_id
     session['user_id'] = user_id
     redirect to '/inventory'
@@ -48,8 +51,8 @@ end
 post '/registration/accept' do
 
   if params['login'] != "" && params['password'] != ""
-    registration(params['login'], params['password'])
-    redirect '/inventory'
+    session['user_id'] = registration params['login'], params['password']
+    redirect '/'
   else
     redirect '/registration'
   end
@@ -59,7 +62,7 @@ end
 get('/inventory') do
 
   content_type 'text'
-  erb show_inventory(store, session['user_id'])
+  show_inventory store, session['user_id']
 
 end
 
@@ -67,28 +70,28 @@ get '/lots' do
 
   content_type 'text'
   if !params['user_id']
-    erb show_lots(store, session['user_id'].to_i)
-  else
-    erb show_lots(store, params['user_id'].to_i)
+    show_lots store, session['user_id'].to_i
+  elsif !session['user_id']
+    show_lots store, params['user_id'].to_i
   end
 
 end
 
 get '/lots/add' do
 
-  add_lot(session['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i, store[0].cost.to_i)
+  add_lot session['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i, store[0].cost.to_i
 
 end
 
 get '/lots/return' do
 
-  return_lot(session['user_id'].to_i, params['lot_id'].to_i)
+  return_lot session['user_id'].to_i, params['lot_id'].to_i
 
 end
 
 get '/lots/buy' do
 
-  buy_lot(session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i)
+  buy_lot session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i
 
 end
 
@@ -96,25 +99,25 @@ end
 get '/ads' do
 
   content_type 'text'
-  erb show_ads
+  show_ads
 
 end
 
 get '/ads/add' do
 
-  add_ad(store, session['user_id'].to_i, params['lot_id'].to_i)
+  add_ad store, session['user_id'].to_i, params['lot_id'].to_i
 
 end
 
 get '/ads/delete' do
 
-  delete_ad(session['user_id'].to_i, params['ad_id'].to_i)
+  delete_ad session['user_id'].to_i, params['ad_id'].to_i
 
 end
 
 get ('/ads/filter') do
 
   content_type 'text'
-  filter(params['name'], params['price'].to_i, params['count'].to_i)
+  filter_ads params['name'], params['count'], params['price']
 
 end

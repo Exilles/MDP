@@ -31,19 +31,27 @@ def add_ad(store, user_id, lot_id) # добавление объявления
   if user.money >= 5 # если у пользователя достаточно денег чтобы выставить объявление, то
     lot = Lot[:id => lot_id, :user_id => user_id] # lot = лоту, к которому добавляется объявление
     if !lot.ad_id # и если у лота нет объявления, то
-      new_ad(user, lot, "Продаётся предмет \"#{store[lot.item_id].name}\" х #{lot.count_lot} шт. по цене #{lot.price} за штуку", lot_id)
+      new_ad(user, lot, "Продаётся предмет \"#{store[lot.item_id].name}\" х #{lot.count_lot} шт. по цене #{lot.price} за штуку", lot_id) # создание нового объявления
     else # иначе у лота есть объявление, а значит мы его редактируем
       delete_ad(user_id, lot.ad_id) # удаляем объявление, которое было
-      new_ad(user, lot, "Продаётся предмет \"#{store[lot.item_id].name}\" х #{lot.count_lot} шт. по цене #{lot.price} за штуку", lot_id)
+      new_ad(user, lot, "Продаётся предмет \"#{store[lot.item_id].name}\" х #{lot.count_lot} шт. по цене #{lot.price} за штуку", lot_id) # создание нового объявления
     end
   end
 
 end
 
-def filter(name, price_lot, count_lot)
+def filter_ads(name, count, price) # фильтр объявлений
 
-  filter = DB[:lots].join_table(:inner, DB[:ads], :id => :ad_id)
-  filter.where(Sequel.like(:description, "%#{name}%"), :price => price_lot, :count_lot => count_lot)
+  filter = DB[:lots].join_table(:inner, DB[:ads], :id => :ad_id) # filter = объединение таблиц объявлений и лотов
+  if name # если был введен параметр name, то сортируем по нему
+    filter = filter.where(Sequel.like(:description, "%#{name}%"))
+  end
+  if count # если был введен параметр count, то сортируем по нему
+    filter = filter.where(:count_lot => count)
+  end
+  if price # если был введен параметр price, то сортируем по нему
+    filter = filter.where(:price => price)
+  end
   xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<ads>\n"
   filter.each do |ad|
     xml << "  <id=\"#{ad.fetch(:id)}\" user_id=\"#{ad.fetch(:name)}\" description=\"#{ad.fetch(:description)}\">\n"

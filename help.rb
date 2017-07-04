@@ -3,6 +3,7 @@ require 'sequel'
 require 'yaml'
 require 'erb'
 require 'benchmark'
+require 'thread'
 
 DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
 
@@ -170,3 +171,26 @@ store = ItemStore.new('config.yml').all
 # Lot.where(:user_id => 1).each do |lot|
 #   p store[Item[:id => lot.item_id].item_id - 1].name
 # end
+
+# threads = Thread.pool(2)
+#
+#   threads.process {
+#     [1, 5].each do |user_id|
+#       buy_lot(user_id, 24, 2)
+#     end
+#   }
+#
+# threads.shutdown
+
+threads = []
+test = Mutex.new
+
+[1, 5, 6].each do |user_id|
+  threads << Thread.new do
+    test.synchronize do
+      buy_lot(user_id, 25, 1)
+    end
+  end
+end
+
+threads.each(&:join)
