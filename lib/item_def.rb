@@ -12,14 +12,4 @@ class Item
     end
   end
 
-  def save (item)
-    @store.transaction do
-      unless item.id
-        highest_id = @store.roots.max || 0
-        item.id = highest_id + 1
-      end
-      @store[item.id] = item
-    end
-  end
-
 end

@@ -17,7 +17,7 @@ class User
     #вариант через String
     xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n" + "<inventory money=\"#{User[:id=>id].money}\">\n"
     Item.where(:user_id => id).each do |item|
-      xml << "  <item name=\"#{all_items[item.item_id - 1].name}\" count=\"#{item.count_item}\" cost=\"#{all_items[item.item_id - 1].cost}\" item_id=\"#{item.id}\">\n"
+      xml << "  <item name=\"#{all_items[item.item_id ].name}\" count=\"#{item.count_item}\" cost=\"#{all_items[item.item_id - 1].cost}\" item_id=\"#{item.id}\">\n"
     end
     xml << "</inventory>"
 

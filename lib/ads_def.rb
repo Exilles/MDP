@@ -16,7 +16,7 @@ class Ad
     store  = Item.new('item.yml').all
     lot = Lot[:id => lot_id]
     if !lot.ad_id
-      ad = Ad.create(:name => store[Item[:id => lot.item_id].item_id - 1].name, :description => " #{lot.count_lot} шт. по цене #{lot.price} за штуку", :lot_id => lot_id)
+      ad = Ad.create(:name => store[Item[:id => lot.item_id].item_id].name, :description => " #{lot.count_lot} шт. по цене #{lot.price} за штуку", :lot_id => lot_id)
       Lot.where(:id => lot_id).update(:ad_id => ad.id)
       User.where(:id => user_id).update(:money => User[:id => user_id].money - 5)
       true
@@ -34,13 +34,25 @@ class Ad
   end
 
 
-  def filter(name_lot, price_lot, count_lot)
+  def filter(name_lot = nil, price_lot = nil, count_lot = nil)
+
     filter = DB[:lots].join_table(:inner, DB[:ads], :id => :ad_id)
-    filter.where(:name => name_lot, :price => price_lot, :count_lot => count_lot)
+
+    if name_lot!= nil
+     filter =  filter.where(:name => name_lot) #фильтр по названию объявления
+    end
+
+      if price_lot!=nil
+       filter = filter.where(:price => price_lot) #фильтр по цене
+      end
+
+        if count_lot!=nil
+          filter = filter.where(:count_lot => count_lot) #фильтр по количеству предметов в лоте
+        end
 
     xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<ads>\n"
     filter.each do |ads|
-      xml << "  <nickname=\"#{User[:id => ads.fetch(:user_id)].login}\" name = \"#{ads.fetch(:name)}\" description=\"#{ads.fetch(:description)}\">\n"
+      xml << "  <Nickname=\"#{User[:id => ads.fetch(:user_id)].login}\" name = \"#{ads.fetch(:name)}\" description=\"#{ads.fetch(:description)}\">\n"
     end
     xml << "</ads>"
  end

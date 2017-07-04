@@ -136,7 +136,7 @@ end
 get ('/ad/show/filter') do
   content_type 'text'
   @ad = Ad.new
-  @ad.filter(params['name'], params['price'].to_i, params['count'].to_i)
+  erb @ad.filter(params['name'], params['price'], params['count'])
 end
 
 # usert.items

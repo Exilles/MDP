@@ -1,4 +1,8 @@
 ---
+0: !ruby/object:Item
+  name: Count_of_lots
+  cost: '5'
+  id: 0
 1: !ruby/object:Item
   name: Банан
   cost: '10'

@@ -90,11 +90,51 @@ require_relative 'lib/user_def'
 # xml << "</ads>"
 #
 # puts xml
-
-filter = DB[:lots].join_table(:inner, DB[:ads], :id => :ad_id)
-filter.where(:name => 'Меч', :price => 150, :count_lot => 2)
-filter.each do |t|
- t.each { |key, value| puts "#{key} => #{value}" }
- test=t.fetch(:id)
-  puts test
+# price_lot = 150
+# name_lot
+# count_lot
+#
+# filter = DB[:lots].join_table(:inner, DB[:ads], :id => :ad_id)
+#
+# if name_lot!= nil
+#  filter =  filter.where(:name => name_lot) #фильтр по названию объявления
+# end
+#
+# if price_lot!=nil
+#  filter = filter.where(:price => price_lot) #фильтр по цене
+# end
+#
+# if count_lot!=nil
+#  filter = filter.where(:count_lot => count_lot) #фильтр по количеству предметов в лоте
+# end
+#
+# xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<ads>\n"
+# filter.each do |ads|
+#  xml << "  <Nickname=\"#{User[:id => ads.fetch(:user_id)].login}\" name = \"#{ads.fetch(:name)}\" description=\"#{ads.fetch(:description)}\">\n"
+# end
+# xml << "</ads>"
+#
+# puts xml
+mutex = Mutex.new
+threads = []
+lot = Lot.new
+[1, 3, 4].each do |host|
+ threads << Thread.new do
+  mutex.synchronize do
+   lot.buy_lot(21,1,host)
+   end
+ end
 end
+
+threads.each(&:join)
+
+n = 1
+lot = Lot.new
+Benchmark.bm do |x|
+x.report { n.times do ;
+lot.buy_lot(19,1,2)
+end
+}
+end
+
+
