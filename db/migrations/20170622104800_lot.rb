@@ -4,7 +4,7 @@ Sequel.migration do
       primary_key :id
       Integer :count_lot
       Integer :price
-      Integer :update_time #столбец для времени обновления данных
+      Fixnum :update_time #столбец для времени обновления данных
       foreign_key :user_id
       foreign_key :ad_id
       foreign_key :item_id

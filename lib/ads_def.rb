@@ -15,7 +15,7 @@ class Ad
   def add_ad(user_id, lot_id)
     store  = Item.new('item.yml').all
     lot = Lot[:id => lot_id]
-    if !lot.ad_id
+    if !lot.ad_id #проверям не выставлено ли уже объявление на этот лот
       ad = Ad.create(:name => store[Item[:id => lot.item_id].item_id].name, :description => " #{lot.count_lot} шт. по цене #{lot.price} за штуку", :lot_id => lot_id)
       Lot.where(:id => lot_id).update(:ad_id => ad.id)
       User.where(:id => user_id).update(:money => User[:id => user_id].money - 5)
@@ -51,7 +51,7 @@ class Ad
         end
 
     xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<ads>\n"
-    filter.each do |ads|
+    filter.each do |ads| #ads - hesh
       xml << "  <Nickname=\"#{User[:id => ads.fetch(:user_id)].login}\" name = \"#{ads.fetch(:name)}\" description=\"#{ads.fetch(:description)}\">\n"
     end
     xml << "</ads>"

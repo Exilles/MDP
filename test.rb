@@ -115,26 +115,50 @@ require_relative 'lib/user_def'
 # xml << "</ads>"
 #
 # puts xml
-mutex = Mutex.new
-threads = []
-lot = Lot.new
-[1, 3, 4].each do |host|
- threads << Thread.new do
-  mutex.synchronize do
-   lot.buy_lot(21,1,host)
-   end
- end
-end
+# mutex = Mutex.new
+# threads = []
+# lot = Lot.new
+# [1, 3, 4].each do |host|
+#  threads << Thread.new do
+#   mutex.synchronize do
+#    lot.buy_lot(21,1,host)
+#    end
+#  end
+# end
+#
+# threads.each(&:join)
 
-threads.each(&:join)
+# n = 1
+# lot = Lot.new
+# Benchmark.bm do |x|
+# x.report { n.times do ;
+# lot.buy_lot(19,1,2)
+# end
+# }
+# end
+
+
+lot = Lot.new
+threads = []
+
+ threads << Thread.new do
+  lot.buy_lot(33, 1, 1)
+ end
+
+ threads << Thread.new do
+   sleep(0.001)
+  lot.buy_lot(33, 1, 3)
+ end
+
+ threads << Thread.new do
+  sleep(0.002)
+  lot.buy_lot(33, 1, 4)
+ end
 
 n = 1
-lot = Lot.new
 Benchmark.bm do |x|
 x.report { n.times do ;
-lot.buy_lot(19,1,2)
+threads.each(&:join)
 end
 }
 end
-
-

@@ -54,10 +54,6 @@ get ('/lot/return') do
   'Лот успешно возвращен'
 end
 
-patch ('/lot/edit') do
-  session['id']
-end
-
 get ('/lot/show') do
   content_type 'text'
   session['id']
@@ -105,10 +101,6 @@ end
 #html отображения для объявлений
 get ('/ad/new') do
   erb :new_ad
-end
-
-patch ('/ad/edit') do
-  erb :edit_ad
 end
 
 get ('/ad/show') do
