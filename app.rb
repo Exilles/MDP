@@ -69,9 +69,9 @@ end
 get '/lots' do
 
   content_type 'text'
-  if !params['user_id']
+  if session['user_id']
     show_lots store, session['user_id'].to_i
-  elsif !session['user_id']
+  elsif params['user_id']
     show_lots store, params['user_id'].to_i
   end
 

@@ -87,37 +87,37 @@
 </head>
 <body>
 <div>
-        <table>
-            <tr>
-                <th colspan="2">Регистрация</th>
-            </tr>
-            <tr>
-                <td colspan="2"><%= "-"*54 %></td>
-            </tr>
-            <form method="post" action="/registration/accept">
-            <tr>
-                <td><label for="login">Введите логин</label></td>
-                <td><input type="text" name="login"></td>
-            </tr>
-            <tr>
-                <td><label for="password">Введите пароль</label></td>
-                <td><input type="password" name="password"></td>
-            </tr>
-            <tr>
-                <td colspan="2"><%= "-"*54 %></td>
-            </tr>
-            <tr>
-                <td>
-                    <input id="button" type="submit" value="Принять">
-                </td>
-            </form>
-                <td align="right">
-                    <form action="/">
-                        <input id="button" type="submit" value="Отменить">
-                    </form>
-                </td>
-            </tr>
-        </table>
+    <table>
+        <tr>
+            <th colspan="2">Регистрация</th>
+        </tr>
+        <tr>
+            <td colspan="2"><%= "-"*70 %></td>
+        </tr>
+        <form method="post" action="/registration/accept">
+        <tr>
+            <td><label for="login">Введите логин</label></td>
+            <td><input type="text" name="login"></td>
+        </tr>
+        <tr>
+            <td><label for="password">Введите пароль</label></td>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td colspan="2"><%= "-"*70 %></td>
+        </tr>
+        <tr>
+            <td>
+                <input id="button" type="submit" value="Принять">
+            </td>
+        </form>
+            <td align="right">
+                <form action="/">
+                    <input id="button" type="submit" value="Отменить">
+                </form>
+            </td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>

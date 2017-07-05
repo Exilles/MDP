@@ -17,6 +17,8 @@ require_relative 'controls/login'
 require_relative 'controls/inventory'
 require_relative 'controls/lots'
 
+store = ItemStore.new('config.yml').all
+
 # ----- КОМАНДЫ ТЕРМИНАЛА -----
 # sequel -e production -m db/migrations/ db/config/database.yml - запуск миграций
 # psql -h localhost market_db admin - подключение к БД через терминал
@@ -108,8 +110,6 @@ require_relative 'controls/lots'
 
 # User.association_join(:items).each {|row| p row}
 
-store = ItemStore.new('config.yml').all
-
 # store = YAML::Store.new('config.yml')
 
 # xml = Builder::XmlMarkup.new( :target => $stdout, :indent => 2 )
@@ -172,25 +172,32 @@ store = ItemStore.new('config.yml').all
 #   p store[Item[:id => lot.item_id].item_id - 1].name
 # end
 
-# threads = Thread.pool(2)
+# threads = []
 #
-#   threads.process {
-#     [1, 5].each do |user_id|
-#       buy_lot(user_id, 24, 2)
+# threads << Thread.new do
+#   buy_lot(1, 19, 2)
+# end
+#
+# threads << Thread.new do
+#   sleep 0.05
+#   buy_lot(5, 19, 2)
+# end
+#
+# threads << Thread.new do
+#   sleep 0.1
+#   buy_lot(6, 19, 2)
+# end
+#
+# # threads.each do |t|
+# #   t.join
+# # end
+#
+# n = 1
+# Benchmark.bm do |x|
+#   x.report { n.times do
+#     threads.each do |t|
+#       t.join
 #     end
-#   }
-#
-# threads.shutdown
+#   end }
+# end
 
-threads = []
-test = Mutex.new
-
-[1, 5, 6].each do |user_id|
-  threads << Thread.new do
-    test.synchronize do
-      buy_lot(user_id, 25, 1)
-    end
-  end
-end
-
-threads.each(&:join)

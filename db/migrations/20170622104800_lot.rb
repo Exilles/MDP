@@ -7,6 +7,7 @@ Sequel.migration do
       Integer :user_id
       Integer :item_id
       Integer :ad_id
+      Real :time
     end
   end
 end

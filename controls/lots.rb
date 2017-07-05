@@ -1,4 +1,4 @@
-def show_lots(store, user_id) # отображение лотов
+def show_lots store, user_id # отображение лотов
 
   xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<lots>\n"
   Lot.where(:user_id => user_id).each do |lot|
@@ -8,7 +8,7 @@ def show_lots(store, user_id) # отображение лотов
 
 end
 
-def add_lot(user_id, item_id, count, price, count_of_lots) # добавление лота
+def add_lot user_id, item_id, count, price, count_of_lots # добавление лота
 
   if Lot.where(:user_id => user_id).count < count_of_lots # если у пользователя кол-во лотов меньше допустимого, то
     item = Item[:user_id => user_id, :item_id => item_id] # item = предмету, который выставляют в лот
@@ -26,28 +26,38 @@ end
 
 def buy_lot(user_id, lot_id, count) # покупка из лота
 
+  number = 0
   lot = Lot[:id => lot_id] # lot = лоту, в котором происходит покупка
+
+  while lot.time do
+    number = number + 1
+    if number == 100
+      return
+    end
+  end
+
+  lot.update(:time => Time.now.to_f) # устанавливаем время покупки
+
   if count <= lot.count_lot && lot.user_id != user_id # если покупаемое кол-во предмета из лота <= кол-ву этого предмета && покупку совершает не тот пользователь, который выставил лот, то
-    mutex = Mutex.new
-    mutex.synchronize do
-      if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ву этого предмета из лота, то
-        lot.update(:count_lot => lot.count_lot - count) # обновляем кол-во предметов в лоте
-      else
-        lot.delete # иначе удаляем лот, ибо кол-ву предметов будет равно 0
-      end
-      user_buy = User[:id => user_id] # user_buy = записи юзера, который покупает лот
-      user_sell =  User[:id => lot.user_id] # user_sell = записи юзера, который продает лот
-      user_sell.update(:money => user_sell.money + lot.price * count) # прибавляем бабосики продавцу
-      user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
-      item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
-      if item_buy # если предмет есть в инвентаре покупателя, то
-        item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
-      else
-        Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
-      end
+    if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ву этого предмета из лота, то
+      lot.update(:count_lot => lot.count_lot - count) # обновляем кол-во предметов в лоте
+    else
+      lot.delete # иначе удаляем лот, ибо кол-ву предметов будет равно 0
+    end
+    user_buy = User[:id => user_id] # user_buy = записи юзера, который покупает лот
+    user_sell =  User[:id => lot.user_id] # user_sell = записи юзера, который продает лот
+    user_sell.update(:money => user_sell.money + lot.price * count) # прибавляем бабосики продавцу
+    user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
+    item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
+    if item_buy # если предмет есть в инвентаре покупателя, то
+      item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
+    else
+      Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
     end
   end
   # иначе покупаемое кол-во предмета из лота больше кол-ву этого предмета в лоте, а значит покупка не произойдет
+
+  lot.update(:time => nil) # обнуляем время покупки
 
 end
 
