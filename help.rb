@@ -172,32 +172,54 @@ store = ItemStore.new('config.yml').all
 #   p store[Item[:id => lot.item_id].item_id - 1].name
 # end
 
-# threads = []
-#
-# threads << Thread.new do
-#   buy_lot(1, 19, 2)
-# end
-#
-# threads << Thread.new do
-#   sleep 0.05
-#   buy_lot(5, 19, 2)
-# end
-#
-# threads << Thread.new do
-#   sleep 0.1
-#   buy_lot(6, 19, 2)
-# end
-#
-# # threads.each do |t|
-# #   t.join
-# # end
-#
-# n = 1
-# Benchmark.bm do |x|
-#   x.report { n.times do
-#     threads.each do |t|
-#       t.join
-#     end
-#   end }
-# end
+def test_buy_lot(user_id, lot_id, count, mas) # покупка из лота
 
+  lot = Lot[:id => lot_id] # lot = лоту, в котором происходит покупка
+  time_now = Time.now.to_f
+  mas << time_now
+
+  if time_now != mas.min
+    return
+  end
+
+  if count <= lot.count_lot && lot.user_id != user_id # если покупаемое кол-во предмета из лота <= кол-ву этого предмета && покупку совершает не тот пользователь, который выставил лот, то
+    if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ву этого предмета из лота, то
+      lot.update(:count_lot => lot.count_lot - count) # обновляем кол-во предметов в лоте
+    else
+      lot.delete # иначе удаляем лот, ибо кол-ву предметов будет равно 0
+    end
+    user_buy = User[:id => user_id] # user_buy = записи юзера, который покупает лот
+    user_sell =  User[:id => lot.user_id] # user_sell = записи юзера, который продает лот
+    user_sell.update(:money => user_sell.money + lot.price * count) # прибавляем бабосики продавцу
+    user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
+    item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
+    if item_buy # если предмет есть в инвентаре покупателя, то
+      item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
+    else
+      Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
+    end
+  end
+  # иначе покупаемое кол-во предмета из лота больше кол-ву этого предмета в лоте, а значит покупка не произойдет
+
+  mas.each {|m| mas.delete(m)}
+
+end
+
+threads = []
+mas = []
+
+threads << Thread.new do
+  test_buy_lot(1, 19, 2, mas)
+end
+
+threads << Thread.new do
+  sleep 0.00000001
+  test_buy_lot(5, 19, 2, mas)
+end
+
+threads << Thread.new do
+  sleep 0.00000002
+  test_buy_lot(6, 19, 2, mas)
+end
+
+threads.each {|t| t.join}
