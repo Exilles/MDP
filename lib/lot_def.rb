@@ -64,11 +64,13 @@ class Lot
   end
 
   def buy_lot(lot_id, count, user_buyer_id)
-
+    # Sequel.extension :core_extensions
+    # Sequel.extension :core_refinements
+    # Sequel.extension :pg_array_ops
 
     lot = Lot[:id => lot_id]
 
-    lot.update(:update_time => nil)
+
     user_buyer = User[:id => user_buyer_id]
     user_seller = User[:id => lot.user_id]
     i=0
@@ -87,17 +89,15 @@ class Lot
 
       # while i<10 do #цикл для попытки купить этот товар
 
-        if lot.update_time == nil #смотрим успрел ли кто-то начать покупку этого товара раньше
-           Lot.insert(:update_time => time_for_base.to_i, :user_id => user_buyer_id, :count_lot => count)
-
-          # puts lot.update_time
+          # if lot.update_time.count == 0   #смотрим успрел ли кто-то начать покупку этого товара раньше
+           # Lot.insert(:update_time => time_for_base.to_i, :user_id => user_buyer_id, :count_lot => count)
+           lot.update_time << time_for_base.to_i
+           lot.save
         # end
 
-          p = DB[:lots].min(:update_time)
+
          if  p == time_for_base.to_i
-           puts lot_id
-           puts count
-           puts user_buyer_id
+
           #Thread.new do # распределение потоков, для предотвращения одновременной покупки предметов
           #mutex.synchronize do
 
@@ -136,7 +136,7 @@ class Lot
     #
         end
 
-      end
+        # end
 
     #   return false
     #

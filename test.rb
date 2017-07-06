@@ -3,6 +3,7 @@ require 'yaml'
 require 'yaml/store'
 require 'sequel'
 require 'benchmark'
+# require 'sequel-pg_array'
 DB = Sequel.connect(:adapter => 'postgres', :host => 'localhost', :database => 'market_db', :user => 'admin', :password => '111')
 
 require_relative 'db/Model/lot'
@@ -13,6 +14,12 @@ require_relative 'db/Model/ad'
 require_relative 'lib/ads_def'
 require_relative 'db/Model/user'
 require_relative 'lib/user_def'
+
+Sequel::Model.db.extension :pg_array
+
+
+
+# Sequel::Plugins::Serialization
 
 # id = 1
 # Lot.where(:user_id => id).each do |userlot|
@@ -136,29 +143,40 @@ require_relative 'lib/user_def'
 # end
 # }
 # end
+# Sequel.extension :core_extensions
+# Sequel.extension :core_refinements
+# Sequel.extension :pg_array_ops
 
-
+mass = []
 lot = Lot.new
 threads = []
 
  threads << Thread.new do
-  lot.buy_lot(33, 1, 1)
+   lot.buy_lot(33, 1, 1)
+   # lot.update_time.push(1)
+   # lot.save
  end
 
  threads << Thread.new do
-   sleep(0.001)
+  sleep(0.001)
   lot.buy_lot(33, 1, 3)
+   # lot.update_time.push(2)
+   # lot.save
  end
 
  threads << Thread.new do
   sleep(0.002)
   lot.buy_lot(33, 1, 4)
+  # lot.update_time.push(3)
+  # lot.save
  end
 
-n = 1
-Benchmark.bm do |x|
-x.report { n.times do ;
-threads.each(&:join)
-end
-}
-end
+threads.each{|t| t.join}
+
+# n = 1
+# Benchmark.bm do |x|
+# x.report { n.times do ;
+#
+# end
+# }
+# end

@@ -6,6 +6,7 @@ require 'sinatra'
 require 'nokogiri'
 require 'rexml/document'
 require 'yaml/store'
+require 'sequel-pg_array'
 
 DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
 
@@ -18,6 +19,8 @@ require_relative 'lib/ads_def'
 require_relative 'lib/lot_def'
 require_relative 'lib/user_def'
 require_relative 'lib/item_def'
+
+
 
 enable :sessions
 
