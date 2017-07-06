@@ -7,7 +7,7 @@ Sequel.migration do
       Integer :user_id
       Integer :item_id
       Integer :ad_id
-      Real :time
+      column :time, 'real[]', :default => '{}'
     end
   end
 end

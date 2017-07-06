@@ -21,6 +21,7 @@ require_relative 'controls/lots'
 require_relative 'controls/ads'
 
 store = ItemStore.new('config.yml').all
+mas = []
 
 enable :sessions
 
@@ -91,7 +92,7 @@ end
 
 get '/lots/buy' do
 
-  buy_lot session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i
+  buy_lot session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i, mas
 
 end
 

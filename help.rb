@@ -4,8 +4,11 @@ require 'yaml'
 require 'erb'
 require 'benchmark'
 require 'thread'
+require 'sequel/plugins/serialization'
 
 DB=Sequel.connect(YAML.load(ERB.new(File.read('db/config/database.yml')).result)['production'])
+
+DB.extension :pg_array
 
 require_relative 'lib/item_yml'
 require_relative 'lib/item_store'
@@ -162,25 +165,31 @@ store = ItemStore.new('config.yml').all
 #   @i = @i + 1
 # end while @i < 5
 
-# @i = 21
+# @i = 1
 # begin
-#   Item.insert(:item_id => @i, :count_item => rand(1..10), :user_id => 1)
+#   Item.insert(:item_id => @i, :count_item => rand(1..20), :user_id => 1)
 #   @i = @i + 1
-# end while @i < 1021
+# end while @i < 15
 
-# Lot.where(:user_id => 1).each do |lot|
-#   p store[Item[:id => lot.item_id].item_id - 1].name
-# end
-
-def test_buy_lot(user_id, lot_id, count, mas) # покупка из лота
+def test_buy_lot(user_id, lot_id, count) # покупка из лота
 
   lot = Lot[:id => lot_id] # lot = лоту, в котором происходит покупка
-  time_now = Time.now.to_f
-  mas << time_now
 
-  if time_now != mas.min
-    return
-  end
+  time_now = Time.now.to_f.divmod 1
+
+  lot.time.push(time_now)
+  lot.save
+
+  # 100.times do |i|
+  #
+  #   if time_now == lot.time.min
+  #     break
+  #   elsif i == 99
+  #     p lot.time.min
+  #     return
+  #   end
+  #
+  # end
 
   if count <= lot.count_lot && lot.user_id != user_id # если покупаемое кол-во предмета из лота <= кол-ву этого предмета && покупку совершает не тот пользователь, который выставил лот, то
     if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ву этого предмета из лота, то
@@ -201,25 +210,23 @@ def test_buy_lot(user_id, lot_id, count, mas) # покупка из лота
   end
   # иначе покупаемое кол-во предмета из лота больше кол-ву этого предмета в лоте, а значит покупка не произойдет
 
-  mas.each {|m| mas.delete(m)}
-
 end
 
 threads = []
-mas = []
 
 threads << Thread.new do
-  test_buy_lot(1, 19, 2, mas)
+  test_buy_lot(2, 1, 2)
 end
 
 threads << Thread.new do
-  sleep 0.00000001
-  test_buy_lot(5, 19, 2, mas)
+  sleep 0.001
+  test_buy_lot(3, 1, 2)
 end
 
 threads << Thread.new do
-  sleep 0.00000002
-  test_buy_lot(6, 19, 2, mas)
+  sleep 0.002
+  test_buy_lot(4, 1, 2)
 end
 
 threads.each {|t| t.join}
+
