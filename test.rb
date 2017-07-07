@@ -14,6 +14,7 @@ require_relative 'db/Model/ad'
 require_relative 'lib/ads_def'
 require_relative 'db/Model/user'
 require_relative 'lib/user_def'
+require_relative 'db/Model/finoperation'
 
 Sequel::Model.db.extension :pg_array
 
@@ -150,33 +151,218 @@ Sequel::Model.db.extension :pg_array
 mass = []
 lot = Lot.new
 threads = []
+i=0
+ # threads << Thread.new do
+ #   lot.buy_lot(63, 2, 1)
+ #   # lot.update_time.push(1)
+ #   # lot.save
+ # end
+
+
 
  threads << Thread.new do
-   lot.buy_lot(33, 1, 1)
-   # lot.update_time.push(1)
-   # lot.save
- end
+   sleep(0.001)
+   if i!=2
+    lot.buy_lot(62, 2, 1)
+   end
+  end
 
- threads << Thread.new do
+threads << Thread.new do
   sleep(0.001)
-  lot.buy_lot(33, 1, 3)
-   # lot.update_time.push(2)
-   # lot.save
- end
+  if i!=2
+    lot.buy_lot(62, 2, 5)
+  end
+end
 
- threads << Thread.new do
-  sleep(0.002)
-  lot.buy_lot(33, 1, 4)
-  # lot.update_time.push(3)
-  # lot.save
- end
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 3)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 4)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 6)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 7)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 8)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 9)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 10)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 11)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 12)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 13)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 14)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 15)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 16)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 17)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 18)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 19)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 20)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 21)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 22)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 23)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 24)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 25)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 26)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 27)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 28)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 29)
+  end
+end
+
+threads << Thread.new do
+  sleep(0.001)
+  if i!=2
+    lot.buy_lot(62, 2, 30)
+  end
+end
+
 
 threads.each{|t| t.join}
 
-# n = 1
-# Benchmark.bm do |x|
-# x.report { n.times do ;
-#
-# end
-# }
-# end

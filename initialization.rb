@@ -14,6 +14,7 @@ require_relative 'db/Model/ad'
 require_relative 'db/Model/lot'
 require_relative 'db/Model/item'
 require_relative 'db/Model/user'
+require_relative 'db/Model/finoperation'
 
 require_relative 'lib/ads_def'
 require_relative 'lib/lot_def'
@@ -91,6 +92,7 @@ get ('/lot/buy') do
   else
     'Ошибка покупки товара'
   end
+  Finoperation.where(:lot_id => params['lot_id'].to_i).delete
 end
 
 
