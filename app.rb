@@ -92,7 +92,7 @@ end
 
 get '/lots/buy' do
 
-  buy_lot session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i, mas
+  buy_lot session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i
 
 end
 

@@ -140,17 +140,6 @@ store = ItemStore.new('config.yml').all
 #   end }
 # end
 
-# n = 1
-# Benchmark.bm do |x|
-#   x.report { n.times do
-#     item_id = 12
-#     user_id = 1
-#     count = 1
-#     item = Item[:user_id => user_id, :item_id => item_id]
-#     item.update(:count_item => item.count_item - count)
-#   end }
-# end
-
 #{ 'здесь был Вася' }
 
 # Item.where(:user_id => 1).each do |item|
@@ -174,53 +163,49 @@ store = ItemStore.new('config.yml').all
 def test_buy_lot(user_id, lot_id, count) # покупка из лота
 
   lot = Lot[:id => lot_id] # lot = лоту, в котором происходит покупка
+  user_buy = User[:id => user_id] # user_buy = записи юзера, который покупает лот
+  time_now = Time.now.to_f
 
-  time_now = Time.now.to_f.divmod 1
-
-  lot.time.push(time_now)
-  lot.save
-
-  # 100.times do |i|
-  #
-  #   if time_now == lot.time.min
-  #     break
-  #   elsif i == 99
-  #     p lot.time.min
-  #     return
-  #   end
-  #
-  # end
-
-  if count <= lot.count_lot && lot.user_id != user_id # если покупаемое кол-во предмета из лота <= кол-ву этого предмета && покупку совершает не тот пользователь, который выставил лот, то
-    if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ву этого предмета из лота, то
-      lot.update(:count_lot => lot.count_lot - count) # обновляем кол-во предметов в лоте
-    else
-      lot.delete # иначе удаляем лот, ибо кол-ву предметов будет равно 0
-    end
-    user_buy = User[:id => user_id] # user_buy = записи юзера, который покупает лот
-    user_sell =  User[:id => lot.user_id] # user_sell = записи юзера, который продает лот
-    user_sell.update(:money => user_sell.money + lot.price * count) # прибавляем бабосики продавцу
-    user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
-    item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
-    if item_buy # если предмет есть в инвентаре покупателя, то
-      item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
-    else
-      Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
-    end
+  DB.transaction do
+    lot.time.push(time_now)
+    lot.save
   end
-  # иначе покупаемое кол-во предмета из лота больше кол-ву этого предмета в лоте, а значит покупка не произойдет
+
+  1000000.times do
+
+    if count <= lot.count_lot  && user_buy.money >= count * lot.count_lot && lot.user_id != user_id # если покупаемое кол-во предмета из лота <= кол-ву этого предмета && покупку совершает не тот пользователь, который выставил лот, т
+      if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ва этого предмета из лота, то
+        lot.update(:count_lot => lot.count_lot - count) # обновляем кол-во предметов в лоте
+      else
+        lot.delete # иначе удаляем лот, ибо кол-во предметов будет равно 0
+      end
+      user_sell =  User[:id => lot.user_id] # user_sell = записи юзера, который продает лот
+      user_sell.update(:money => user_sell.money + lot.price * count) # прибавляем бабосики продавцу
+      user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
+      item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
+      if item_buy # если предмет есть в инвентаре покупателя, то
+        item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
+      else
+        Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
+      end
+    end
+    # иначе покупаемое кол-во предмета из лота больше кол-ву этого предмета в лоте, а значит покупка не произойдет
+
+  end
 
 end
 
 threads = []
+lots = []
+lot_id = 7
 
 threads << Thread.new do
-  test_buy_lot(2, 1, 2)
+  test_buy_lot(2, 7, 2)
 end
 
 threads << Thread.new do
   sleep 0.001
-  test_buy_lot(3, 1, 2)
+  test_buy_lot(3, 7, 2)
 end
 
 threads << Thread.new do
@@ -230,3 +215,25 @@ end
 
 threads.each {|t| t.join}
 
+lot = Lot[:id => 7]
+
+# n = 1
+# Benchmark.bm do |x|
+#   x.report { n.times do
+#
+#   end }
+# end
+
+# вставка 0.000014
+# удаление - 0.000006
+# сохранение 0.014 - 0.2
+# обновление - 0.03
+# покупка - 0.05 - 0.3
+# 100 цикл - 0.000021; 1000000 цикл - 0.107916; 10000000 (max) цикл - 1.001432
+
+# users << Time.now.to_f
+# users << Time.now.to_f
+# time_now = Time.now.to_f
+# lot.time.push(time_now)
+# lots[lot_id - 1] = lot.time
+# p lots
