@@ -1,4 +1,4 @@
-def show_lots store, user_id # отображение лотов
+def show_lots(store, user_id) # отображение лотов
 
   xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<lots>\n"
   Lot.where(:user_id => user_id).each do |lot|
@@ -8,7 +8,7 @@ def show_lots store, user_id # отображение лотов
 
 end
 
-def add_lot user_id, item_id, count, price, count_of_lots # добавление лота
+def add_lot(user_id, item_id, count, price, count_of_lots) # добавление лота
 
   if Lot.where(:user_id => user_id).count < count_of_lots # если у пользователя кол-во лотов меньше допустимого, то
     item = Item[:user_id => user_id, :item_id => item_id] # item = предмету, который выставляют в лот

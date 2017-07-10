@@ -19,6 +19,7 @@ require_relative 'db/models/user'
 require_relative 'controls/login'
 require_relative 'controls/inventory'
 require_relative 'controls/lots'
+require_relative 'controls/errors'
 
 store = ItemStore.new('config.yml').all
 
@@ -128,24 +129,8 @@ store = ItemStore.new('config.yml').all
 # n = 1000
 # Benchmark.bm do |x|
 #   x.report { n.times do
-#     user_sell =  User[:id => 1]
-#     user_sell.update(:money => user_sell.money + 0 * 1)
-#   end }
-# end
-#
-# n = 1000
-# Benchmark.bm do |x|
-#   x.report { n.times do
 #     User[:id => 1].update(:money => User[:id => 1].money + 0 * 1)
 #   end }
-# end
-
-#{ 'здесь был Вася' }
-
-# Item.where(:user_id => 1).each do |item|
-#   p store[item.item_id].name
-#   p item.count_item
-#   p store[item.item_id].cost
 # end
 
 # @i = 1
@@ -154,11 +139,11 @@ store = ItemStore.new('config.yml').all
 #   @i = @i + 1
 # end while @i < 5
 
-# @i = 1
+# @i = 8
 # begin
-#   Item.insert(:item_id => @i, :count_item => rand(1..20), :user_id => 1)
+#   Item.insert(:item_id => @i, :count_item => rand(1..20), :user_id => 2)
 #   @i = @i + 1
-# end while @i < 15
+# end while @i < 21
 
 def test_buy_lot(user_id, lot_id, count) # покупка из лота
 
