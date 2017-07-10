@@ -8,7 +8,7 @@ class Lot
 
      xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n" + "<lots>\n"
      Lot.where(:user_id => id).each do |lot|
-      xml << "  <lot name=\"#{all_items[lot.item_id].name}\" price=\"#{lot.price}\" count=\"#{lot.count_lot}\" item_id=\"#{lot.item_id}\" lot_id=\"#{lot.id}\" >\n"
+      xml << "  <Название лота: \"#{all_items[lot.item_id].name}\" Цена: \"#{lot.price}\" Количество предметов: \"#{lot.count_lot}\" id_предмета: \"#{lot.item_id}\" id лота: \"#{lot.id}\" >\n"
      end
      xml << "</lots>"
 
@@ -78,9 +78,9 @@ class Lot
     time_update = Time.new #вариант со временем
 
     if time_update.month < 10
-      time_for_base = time_update.year.to_s + '0' + time_update.month.to_s + time_update.day.to_s + time_update.hour.to_s + time_update.min.to_s + time_update.sec.to_s + time_update.usec.to_s
+      time_for_base = time_update.month.to_s + time_update.day.to_s + time_update.hour.to_s + time_update.min.to_s + time_update.sec.to_s + time_update.usec.to_s
      else
-      time_for_base = time_update.year.to_s + time_update.month.to_s + time_update.day.to_s + time_update.hour.to_s + time_update.min.to_s + time_update.sec.to_s + time_update.usec.to_s
+      time_for_base = time_update.month.to_s + time_update.day.to_s + time_update.hour.to_s + time_update.min.to_s + time_update.sec.to_s + time_update.usec.to_s
     end
 
     Finoperation.insert(:user_buyer_id => user_buyer_id, :lot_id => lot_id, :operation_time => time_for_base.to_i)
@@ -93,18 +93,19 @@ class Lot
      if count <= lot.count_lot && lot.user_id != user_buyer_id && user_buyer.money - lot.price*count>=0
       #проверка на количество покупаемых предметов и продавца и на наличие нужной суммы денег у продавца
 
-       operation_time = DB[:finoperations].min(:operation_time)
+        operation_time = DB[:finoperations].min(:operation_time)
 
         if operation_time == time_for_base.to_i #проверям совпадает ли минимальное время операции с временем покупки пользователя
 
           #Thread.new do # распределение потоков, для предотвращения одновременной покупки предметов
           #mutex.synchronize do
-
+          lot = Lot[:id => lot_id]
           user_seller.update(:money => User[:id => lot.user_id].money + lot.price * count) #обновление суммы денег у продавца
           user_buyer.update(:money => user_buyer.money - lot.price * count) #обновление суммы денег у покупателя
           item = Item[:item_id => lot.item_id, :user_id => user_buyer_id]
 
            if item #проверка на наличие предмета такого же типа у покупателя в инвентаре
+
             item.update(:count_item => item.count_item + count)
              #если есть, то прибавляем количество купленных предметов
            else
@@ -116,17 +117,18 @@ class Lot
              Ad.where(:lot_id => lot.id).delete #удаление объявление, если товара в лоте больше нет
              lot.delete #удаление лота по той же причине
           else
-
+             lot = Lot[:id => lot_id]
              lot.update(:count_lot => lot.count_lot - count) #обновление количества предметов в лоте
 
           end
     #       #end
     #       #end
           Finoperation.where(:user_buyer_id => user_buyer_id, :lot_id => lot_id, :operation_time => time_for_base.to_i).delete
-          puts 'успешно'
+          # puts 'успешно'
           return true
 
         else
+          lot = Lot[:id => lot_id]
 
            if !lot
             return false
@@ -140,6 +142,8 @@ class Lot
        return false
 
      end #конец условия на проверку количество покупаемых предметов и продавца и на наличие нужной суммы денег у продавца
+
+
 
     end #конец цикла попыток для совершения покупок
 

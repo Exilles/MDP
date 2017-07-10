@@ -168,196 +168,196 @@ i=0
   end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.002)
   if i!=2
     lot.buy_lot(62, 2, 5)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.003)
   if i!=2
     lot.buy_lot(62, 2, 3)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.004)
   if i!=2
     lot.buy_lot(62, 2, 4)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.005)
   if i!=2
     lot.buy_lot(62, 2, 6)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.006)
   if i!=2
     lot.buy_lot(62, 2, 7)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.007)
   if i!=2
     lot.buy_lot(62, 2, 8)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.008)
   if i!=2
     lot.buy_lot(62, 2, 9)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.009)
   if i!=2
     lot.buy_lot(62, 2, 10)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.010)
   if i!=2
     lot.buy_lot(62, 2, 11)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.011)
   if i!=2
     lot.buy_lot(62, 2, 12)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.012)
   if i!=2
     lot.buy_lot(62, 2, 13)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.013)
   if i!=2
     lot.buy_lot(62, 2, 14)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.014)
   if i!=2
     lot.buy_lot(62, 2, 15)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.015)
   if i!=2
     lot.buy_lot(62, 2, 16)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.016)
   if i!=2
     lot.buy_lot(62, 2, 17)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.017)
   if i!=2
     lot.buy_lot(62, 2, 18)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.018)
   if i!=2
     lot.buy_lot(62, 2, 19)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.019)
   if i!=2
     lot.buy_lot(62, 2, 20)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.020)
   if i!=2
     lot.buy_lot(62, 2, 21)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.021)
   if i!=2
     lot.buy_lot(62, 2, 22)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.022)
   if i!=2
     lot.buy_lot(62, 2, 23)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.023)
   if i!=2
     lot.buy_lot(62, 2, 24)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.024)
   if i!=2
     lot.buy_lot(62, 2, 25)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.025)
   if i!=2
     lot.buy_lot(62, 2, 26)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.026)
   if i!=2
     lot.buy_lot(62, 2, 27)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.027)
   if i!=2
     lot.buy_lot(62, 2, 28)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.028)
   if i!=2
     lot.buy_lot(62, 2, 29)
   end
 end
 
 threads << Thread.new do
-  sleep(0.001)
+  sleep(0.029)
   if i!=2
     lot.buy_lot(62, 2, 30)
   end

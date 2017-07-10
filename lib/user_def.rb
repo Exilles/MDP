@@ -15,9 +15,9 @@ class User
     all_items = Item.new('item.yml').all
 
     #вариант через String
-    xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n" + "<inventory money=\"#{User[:id=>id].money}\">\n"
+    xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n" + "<inventory Баланс: \"#{User[:id=>id].money}\" Nickname: \"#{User[:id=>id].login}\" >  \n"
     Item.where(:user_id => id).each do |item|
-      xml << "  <item name=\"#{all_items[item.item_id ].name}\" count=\"#{item.count_item}\" cost=\"#{all_items[item.item_id - 1].cost}\" item_id=\"#{item.id}\">\n"
+      xml << "  <Название предмета: \"#{all_items[item.item_id ].name}\" Количество: \"#{item.count_item}\" Минимальная цена: \"#{all_items[item.item_id - 1].cost}\" id предмета: \"#{item.id}\">\n"
     end
     xml << "</inventory>"
 
