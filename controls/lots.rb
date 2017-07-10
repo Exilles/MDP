@@ -29,11 +29,11 @@ def buy_lot(user_id, lot_id, count) # покупка из лота
   lot = Lot[:id => lot_id] # lot = лоту, в котором происходит покупка
   user_buy = User[:id => user_id] # user_buy = записи юзера, который покупает лот
 
-  if count <= lot.count_lot && user_buy.money >= count * lot.count_lot && lot.user_id != user_id # если покупаемое кол-во предмета из лота <= кол-ву этого предмета && покупку совершает не тот пользователь, который выставил лот, то
-    if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ву этого предмета из лота, то
+  if count <= lot.count_lot && user_buy.money >= count * lot.count_lot && lot.user_id != user_id # если покупаемое кол-во предмета из лота <= кол-ву этого предмета && покупку совершает не тот пользователь, который выставил лот, т
+    if count != lot.count_lot # если покупаемое кол-во предмета из лота меньше кол-ва этого предмета из лота, то
       lot.update(:count_lot => lot.count_lot - count) # обновляем кол-во предметов в лоте
     else
-      lot.delete # иначе удаляем лот, ибо кол-ву предметов будет равно 0
+      lot.delete # иначе удаляем лот, ибо кол-во предметов будет равно 0
     end
     user_sell =  User[:id => lot.user_id] # user_sell = записи юзера, который продает лот
     user_sell.update(:money => user_sell.money + lot.price * count) # прибавляем бабосики продавцу
