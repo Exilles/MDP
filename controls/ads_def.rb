@@ -6,7 +6,7 @@ class Ad
 
     xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<ads>\n"
     Ad.each do |ad|
-      xml << "  <Nickname продавца: \"#{User[:id => Lot[:id => ad.lot_id].user_id].login}\" id_продавца: \"#{Lot[:id => ad.lot_id].user_id}\" Товар: \"#{ad.name}\" Описание: \"#{ad.description}\">\n"
+      xml << "  <Nickname_seller=\"#{User[:id => Lot[:id => ad.lot_id].user_id].login}\" user_id=\"#{Lot[:id => ad.lot_id].user_id}\" item_name=\"#{ad.name}\" description=\"#{ad.description}\"/>\n"
     end
     xml << "</ads>"
 
@@ -52,7 +52,7 @@ class Ad
 
     xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<ads>\n"
     filter.each do |ads| #ads - hesh
-      xml << "  <Nickname продавца: \"#{User[:id => ads.fetch(:user_id)].login}\" id_продавца: \"#{ads.fetch(:user_id)}\" Товар: \"#{ads.fetch(:name)}\" Описание: \"#{ads.fetch(:description)}\">\n"
+      xml << "  <seller_nickname=\"#{User[:id => ads.fetch(:user_id)].login}\" seller_id=\"#{ads.fetch(:user_id)}\" item_name=\"#{ads.fetch(:name)}\" description=\"#{ads.fetch(:description)}\"/>\n"
     end
     xml << "</ads>"
  end

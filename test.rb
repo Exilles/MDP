@@ -7,13 +7,13 @@ require 'benchmark'
 DB = Sequel.connect(:adapter => 'postgres', :host => 'localhost', :database => 'market_db', :user => 'admin', :password => '111')
 
 require_relative 'db/Model/lot'
-require_relative 'lib/lot_def'
+require_relative 'controls/lot_def'
 require_relative 'db/Model/item'
-require_relative 'lib/item_def'
+require_relative 'controls/item_def'
 require_relative 'db/Model/ad'
-require_relative 'lib/ads_def'
+require_relative 'controls/ads_def'
 require_relative 'db/Model/user'
-require_relative 'lib/user_def'
+require_relative 'controls/user_def'
 require_relative 'db/Model/finoperation'
 
 Sequel::Model.db.extension :pg_array
@@ -160,212 +160,9 @@ i=0
 
 
 
- threads << Thread.new do
-   sleep(0.001)
-   if i!=2
-    lot.buy_lot(62, 2, 1)
-   end
-  end
+pattern = /[0-9]/
 
-threads << Thread.new do
-  sleep(0.002)
-  if i!=2
-    lot.buy_lot(62, 2, 5)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.003)
-  if i!=2
-    lot.buy_lot(62, 2, 3)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.004)
-  if i!=2
-    lot.buy_lot(62, 2, 4)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.005)
-  if i!=2
-    lot.buy_lot(62, 2, 6)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.006)
-  if i!=2
-    lot.buy_lot(62, 2, 7)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.007)
-  if i!=2
-    lot.buy_lot(62, 2, 8)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.008)
-  if i!=2
-    lot.buy_lot(62, 2, 9)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.009)
-  if i!=2
-    lot.buy_lot(62, 2, 10)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.010)
-  if i!=2
-    lot.buy_lot(62, 2, 11)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.011)
-  if i!=2
-    lot.buy_lot(62, 2, 12)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.012)
-  if i!=2
-    lot.buy_lot(62, 2, 13)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.013)
-  if i!=2
-    lot.buy_lot(62, 2, 14)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.014)
-  if i!=2
-    lot.buy_lot(62, 2, 15)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.015)
-  if i!=2
-    lot.buy_lot(62, 2, 16)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.016)
-  if i!=2
-    lot.buy_lot(62, 2, 17)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.017)
-  if i!=2
-    lot.buy_lot(62, 2, 18)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.018)
-  if i!=2
-    lot.buy_lot(62, 2, 19)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.019)
-  if i!=2
-    lot.buy_lot(62, 2, 20)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.020)
-  if i!=2
-    lot.buy_lot(62, 2, 21)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.021)
-  if i!=2
-    lot.buy_lot(62, 2, 22)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.022)
-  if i!=2
-    lot.buy_lot(62, 2, 23)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.023)
-  if i!=2
-    lot.buy_lot(62, 2, 24)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.024)
-  if i!=2
-    lot.buy_lot(62, 2, 25)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.025)
-  if i!=2
-    lot.buy_lot(62, 2, 26)
-  end
-end
+puts pattern=~"9"
 
 
-threads << Thread.new do
-  sleep(0.026)
-  if i!=2
-    lot.buy_lot(62, 2, 27)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.027)
-  if i!=2
-    lot.buy_lot(62, 2, 28)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.028)
-  if i!=2
-    lot.buy_lot(62, 2, 29)
-  end
-end
-
-threads << Thread.new do
-  sleep(0.029)
-  if i!=2
-    lot.buy_lot(62, 2, 30)
-  end
-end
-
-
-
-
-threads.each{|t| t.join}
 
