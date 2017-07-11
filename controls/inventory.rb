@@ -1,9 +1,9 @@
-def show_inventory(store, id)
+def show_inventory(store, user_id, type = "inventory", error = "")
 
-  xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<inventory money=\"#{User[id].money}\">\n"
-  Item.where(:user_id => id).each do |item|
-    xml << "  <id=\"#{store[item.item_id].id}\" name=\"#{store[item.item_id].name}\" count=\"#{item.count_item}\" cost=\"#{store[item.item_id].cost}\">\n"
+  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><information type=\"#{type}\">#{error}<user_id>#{user_id}</user_id><money>#{User[user_id].money}</money><inventory>"
+  Item.where(:user_id => user_id).each do |item|
+    xml << "<item id=\"#{store[item.item_id].id}\" name=\"#{store[item.item_id].name}\" count=\"#{item.count_item}\" price=\"#{store[item.item_id].price}\"/>"
   end
-  xml << "</inventory>"
+  xml << "</inventory></information>"
 
 end

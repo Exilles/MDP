@@ -16,9 +16,9 @@ require_relative 'db/models/ad'
 require_relative 'db/models/lot'
 require_relative 'db/models/item'
 require_relative 'db/models/user'
-require_relative 'controls/login'
+require_relative 'controls/registration'
 require_relative 'controls/inventory'
-require_relative 'controls/lots'
+require_relative 'controls/lot'
 require_relative 'controls/errors'
 
 store = ItemStore.new('config.yml').all
@@ -145,56 +145,52 @@ store = ItemStore.new('config.yml').all
 #   @i = @i + 1
 # end while @i < 21
 
-def test_buy_lot(user_id, lot_id, count) # покупка из лота
-
-  user_buy = User[:id => user_id]
-
-  10.times do
-    lot = Lot[:id => lot_id]
-    Lot.where(:id => lot_id).update(:number => Lot[:id => lot_id].number + 1)
-    if Lot[:id => lot_id].number == 1
-      p 1
-      if count <= lot.count_lot && user_buy.money >= count * lot.count_lot && lot.user_id != user_id
-        lot.update(:count_lot => lot.count_lot - count)
-        user_sell =  User[:id => lot.user_id] # user_sell = записи юзера, который продает лот
-        user_sell.update(:money => user_sell.money + lot.price * count) # прибавляем бабосики продавцу
-        user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
-        item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
-        if item_buy # если предмет есть в инвентаре покупателя, то
-          item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
-        else
-          Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
-        end
-        if lot.count_lot == 0
-          lot.delete
-        end
-      else
-        # Lot.where(:id => lot_id).update(:number => 0)
-        break
-      end
-      # Lot.where(:id => lot_id).update(:number => 0)
-      break
-    end
-  end
-
-end
-
-threads = []
-lot_id = 8
-
-threads << Thread.new do
-  test_buy_lot(2, lot_id, 2)
-end
-
-threads << Thread.new do
-  sleep 0.001
-  test_buy_lot(3, lot_id, 2)
-end
-
-threads << Thread.new do
-  sleep 0.002
-  test_buy_lot(4, lot_id, 2)
-end
+# def test_buy_lot(user_id, lot_id, count) # покупка из лота
+#
+#   10.times do
+#     lot = Lot[:id => lot_id]
+#     if count <= lot.count_lot
+#       new_count_item = lot.count_lot - count
+#       if Lot.where(:id => lot_id, :count_lot => lot.count_lot).update(:count_lot => new_count_item) != 0
+#         lot = Lot[:id => lot_id]
+#         user_buy = User[:id => user_id]
+#         User[:id => lot.user_id].update(:money => User[:id => lot.user_id].money + lot.price * count) # прибавляем бабосики продавцу
+#         user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
+#         item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
+#         if lot.count_lot == 0
+#           lot.delete
+#         end
+#         if item_buy # если предмет есть в инвентаре покупателя, то
+#           item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
+#         else
+#           Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
+#         end
+#       end
+#     end
+#   end
+#
+# end
+#
+# threads = []
+#
+# threads << Thread.new do
+#   test_buy_lot(2, 8, 2)
+# end
+#
+# threads << Thread.new do
+#   sleep 0.001
+#   test_buy_lot(3, 8, 2)
+# end
+#
+# threads << Thread.new do
+#   sleep 0.002
+#   test_buy_lot(4, 8, 2)
+# end
+#
+# threads << Thread.new do
+#   sleep 0.002
+#   test_buy_lot(7, 8, 2)
+# end
 
 # threads.each {|t| t.join}
 
@@ -218,3 +214,10 @@ end
 # lot.time.push(time_now)
 # lots[lot_id - 1] = lot.time
 # p lots
+
+user_id = "1"
+item_id = "1"
+count = "1"
+price = "1"
+
+puts add_lot_valid(user_id, item_id, count, price, store)

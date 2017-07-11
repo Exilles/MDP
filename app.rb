@@ -12,101 +12,77 @@ require_relative 'db/models/ad'
 require_relative 'db/models/lot'
 require_relative 'db/models/item'
 require_relative 'db/models/user'
-require_relative 'controls/login'
+require_relative 'controls/registration'
 require_relative 'controls/inventory'
-require_relative 'controls/lots'
+require_relative 'controls/lot'
 require_relative 'controls/ads'
 require_relative 'controls/errors'
 
 store = ItemStore.new('config.yml').all
 
-enable :sessions
-
-get '/login' do
-
-  content_type 'text'
-  error = login_valid(params['login'].to_s, params['password'].to_s)
-  if error == ""
-    session['user_id'] = login(params['login'].to_s, params['password'].to_s)
-    "You have successfully signed in."
-  else
-    "The data you entered is:\nLogin: #{params['login']}\nPassword: #{params['password']}\n" + error
-  end
-
-end
-
 get '/registration' do
 
-  content_type 'text'
-  error = register_valid(params['login'].to_s, params['password'].to_s)
-  if error == ""
-    session['user_id'] = registration(params['login'].to_s, params['password'].to_s)
-    "Account successfully registered!\nLogin: #{params['login']}\nPassword: #{params['password']}"
-  else
-    "The data you entered is:\nLogin: #{params['login']}\nPassword: #{params['password']}\n" + error
-  end
+  content_type 'xml'
+  register_valid(params['login'].to_s, params['password'].to_s)
 
 end
 
 get('/inventory') do
 
-  content_type 'text'
-  show_inventory(store, session['user_id'])
+  content_type 'xml'
+  inventory_valid(params['user_id'].to_s, store)
 
 end
 
 get '/lots' do
 
-  content_type 'text'
-  if session['user_id']
-    show_lots(store, session['user_id'].to_i)
-  elsif params['user_id']
-    show_lots(store, params['user_id'].to_i)
-  end
+  content_type 'xml'
+  market_valid(params['user_id'].to_s, store)
 
 end
 
 get '/lots/add' do
 
-  add_lot(session['user_id'].to_i, params['item_id'].to_i, params['count'].to_i, params['price'].to_i, store[0].cost.to_i)
+  content_type 'xml'
+  add_lot_valid(params['user_id'].to_s, params['item_id'].to_s, params['count'].to_s, params['price'].to_s, store)
 
 end
 
 get '/lots/return' do
 
-  return_lot(session['user_id'].to_i, params['lot_id'].to_i)
+  return_lot(params['user_id'].to_i, params['lot_id'].to_i)
 
 end
 
 get '/lots/buy' do
 
-  buy_lot(session['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i)
+  buy_lot(params['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i)
 
 end
 
 
 get '/ads' do
 
-  content_type 'text'
+  content_type 'xml'
   show_ads
 
 end
 
 get '/ads/add' do
 
-  add_ad(store, session['user_id'].to_i, params['lot_id'].to_i)
+  add_ad(store, params['user_id'].to_i, params['lot_id'].to_i)
 
 end
 
 get '/ads/delete' do
 
-  delete_ad(session['user_id'].to_i, params['ad_id'].to_i)
+  delete_ad(params['user_id'].to_i, params['ad_id'].to_i)
 
 end
 
 get ('/ads/filter') do
 
-  content_type 'text'
+  content_type 'xml'
   filter_ads(params['name'], params['count'], params['price'])
 
 end

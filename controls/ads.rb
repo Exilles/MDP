@@ -1,10 +1,10 @@
 def show_ads
 
-  xml = "?xml version=\"1.0\" encoding=\"UTF-8\"?\n<ads>\n"
+  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<information type=\"ads\"><ads>\n"
   Ad.each do |ad|
-    xml << "  <id=\"#{ad.id}\" user_id=\"#{ad.name}\" description=\"#{ad.description}\">\n"
+    xml << "<ad id=\"#{ad.id}\" user_id=\"#{ad.name}\" description=\"#{ad.description}\"/>\n"
   end
-  xml << "</ads>"
+  xml << "</ads></information>"
 
 end
 
