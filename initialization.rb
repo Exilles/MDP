@@ -22,6 +22,7 @@ require_relative 'controls/user_def'
 require_relative 'controls/item_def'
 
 require_relative 'controls/error'
+require_relative 'controls/message'
 
 enable :sessions
 
@@ -80,14 +81,10 @@ get ('/lot/add') do
 end
 
 get ('/lot/buy') do
+  content_type 'xml'
   @lot = Lot.new
-
-  if @lot.buy_lot(params['lot_id'].to_i, params['count'].to_i, params['user_id'])
-    'Товар успешно приобретен'
-  else
-    'Ошибка покупки товара'
-  end
-
+  @xml= @lot.buy_lot(params['lot_id'].to_s, params['count'].to_s, params['user_id'].to_s)
+  @xml
 end
 
 

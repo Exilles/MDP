@@ -37,13 +37,13 @@ class User
         #   end
         #    }.to_xml
       else
-         error_for_enter_data(id,'inventory','user_id','User does not exist')
+         enter_data_error(id,'inventory','user_id','User does not exist')
       end
      else
-       error_for_enter_data(id,'inventory','user_id','User_id contains invalid characters')
+       enter_data_error(id,'inventory','user_id','User_id contains invalid characters')
     end
    else
-     error_for_enter_data(id,'inventory','user_id','User_id does not enter')
+     enter_data_error(id,'inventory','user_id','User_id does not enter')
   end
 
 

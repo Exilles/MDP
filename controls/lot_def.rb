@@ -20,13 +20,13 @@ class Lot
          xml << "</lots>"
 
         else
-          error_for_enter_data(id, 'lot','user_id', 'User does not exist')
+          enter_data_error(0,id,0, 'lot', 'User exists')
         end
       else
-        error_for_enter_data(id, 'lot','user_id', 'User_id contains invalid characters')
+        enter_data_error(0, id, 0,'lot','User_id contains')
       end
     else
-      error_for_enter_data(id, 'lot','user_id', 'User_id does not enter')
+      enter_data_error(0,id,0,'lot', '')
     end
       #вариант через Nokogiri
       # Nokogiri::XML::Builder.new {|xml|
@@ -65,73 +65,144 @@ class Lot
 
   def return_lot (lot_id, user_id)
 
+    if lot_id != '' && user_id!=''
+     return enter_data_error(nil, nil,0, 'return_lot','')
+    end
+
     if lot_id != '' #проверка на ввод id лота
-
-      if user_id!=''  #проверка на ввод id пользователя
-
-       if (/^[0-9\-_]+$/ =~ lot_id) #проверка на корректность введенных данных в id лота
-
-         if(/^[0-9\-_]+$/ =~ user_id) #проверка на корректность введенных данных в id пользователя
-
-           if Lot.where(:id => lot_id).any? #проверка на существование лота
-
-             if User.where(:id => user_id).any? #проверка на существоание пользвателя
-               lot = Lot[:id => lot_id]
-
-               if Item.where(:user_id => user_id, :item_id => lot.item_id).any?
-                item = Item[:user_id => user_id, :item_id => lot.item_id]
-                item.update(:count_item => item.count_item.to_i + lot.count_lot.to_i)
-
-               else
-                Item.insert(:count_item => lot.count_lot.to_i, :item_id => lot.item_id, :user_id => lot.user_id)
-
-               end
-
-              xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <information type=\"return_lot\" >"
-               xml << "<data><lot_id>#{lot_id}</lot_id><user_id>#{user_id}</user_id><count_lot>#{lot.count_lot}</count_lot><price>#{lot.price}</price></data><message>Lot was successfully returned</message>"
-              xml << "</information>"
-
-               lot.delete
-
-               return xml
-
-             else
-               error_for_enter_data(user_id, 'return_lot','user_id', 'User does not exist')
-             end #конец проверки на сущетвование пользователя
-
-           else
-             error_for_enter_data(lot_id, 'return_lot','lot_id', 'Lot does not exist')
-           end #конец проверки на сущестование лота
-
-         else
-           error_for_enter_data(user_id, 'return_lot','user_id', 'User_id contains invalid characters')
-         end #конец проверки на корректность введенных данных в id пользователя
-
-       else
-         error_for_enter_data(lot_id, 'return_lot','lot_id', 'Lot_id contains invalid characters')
-       end #конец проверки на корректность введенных данных в id лота
-
-      else
-        error_for_enter_data(user_id, 'return_lot','user_id', 'User_id does not enter')
-      end #конец проверки на ввод id пользователя
-
-   else
-     error_for_enter_data(lot_id, 'return_lot','lot_id', 'Lot_id does not enter')
+     return enter_data_error(nil, user_id,0, 'return_lot','')
     end #конец условия на проверку ввода лота
+
+    if user_id!=''  #проверка на ввод id пользователя
+      return  enter_data_error(lot_id,nil,0,'return_lot','')
+    end #конец проверки на ввод id пользователя
+
+    if (!(/^[0-9\-_]+$/ =~ lot_id) && !(/^[0-9\-_]+$/ =~ user_id))
+      return enter_data_error(lot_id, user_id,0,'return_lot','Lot_id contains, User_id contains')
+    end
+
+    if !(/^[0-9\-_]+$/ =~ lot_id) #проверка на корректность введенных данных в id лота
+     return enter_data_error(lot_id, user_id,0,'return_lot','Lot_id contains')
+    end #конец проверки на корректность введенных данных в id лота
+
+    if !(/^[0-9\-_]+$/ =~ user_id) #проверка на корректность введенных данных в id пользователя
+     return enter_data_error(lot_id, user_id,0, 'return_lot', 'User_id contains')
+    end #конец проверки на корректность введенных данных в id пользователя
+
+
+    if !Lot.where(:id => lot_id).any? #проверка на существование лота
+      return enter_data_error(lot_id,user_id,0, 'return_lot', 'Lot exists')
+    end #конец проверки на сущестование лота
+
+    if !User.where(:id => user_id).any? #проверка на существоание пользователя
+     return enter_data_error(lot_id,user_id,0, 'return_lot', 'User exists')
+    end #конец проверки на сущетвование пользователя
+
+    if !Lot.where(:id => lot_id, :user_id => user_id).any? #проверка есть ли у пользователя такой лот
+      return having_error(user_id,lot_id)
+    end
+
+
+    lot = Lot[:id => lot_id]
+
+    if Item.where(:user_id => user_id, :item_id => lot.item_id).any?
+
+      item = Item[:user_id => user_id, :item_id => lot.item_id]
+      item.update(:count_item => item.count_item.to_i + lot.count_lot.to_i)
+
+    else
+      Item.insert(:count_item => lot.count_lot.to_i, :item_id => lot.item_id, :user_id => lot.user_id)
+    end
+
+    xml = success_return_lot_message(lot)
+
+    lot.delete
+
+    return xml
+
 
   end
 
   def buy_lot(lot_id, count, user_buyer_id)
-    # Sequel.extension :core_extensions
-    # Sequel.extension :core_refinements
-    # Sequel.extension :pg_array_ops
+
+
+    if count =='' && lot_id =='' && user_buyer_id ==''
+     return enter_data_error(nil,nil,nil,'buy_lot', '')
+    end
+
+    if lot_id=='' && count==''
+      return enter_data_error(nil,user_buyer_id,nil, 'buy_lot', '')
+    end
+
+    if lot_id == '' && user_buyer_id == ''
+      return enter_data_error(nil,nil,count,'buy_lot', '')
+    end
+
+    if count =='' && user_buyer_id == ''
+      return enter_data_error(lot_id,nil,nil,'buy_lot','')
+    end
+
+    if user_buyer_id == ''
+      return enter_data_error(lot_id,nil,count,'buy_lot','')
+    end
+
+    if count == ''
+      return enter_data_error(lot_id,user_buyer_id,nil,'buy_lot','')
+    end
+
+    if lot_id == ''
+      return enter_data_error(nil,user_buyer_id,count,'buy_lot','')
+    end
+
+
+
+    if (!(/^[0-9\-_]+$/ =~ user_buyer_id) && !(/^[0-9\-_]+$/ =~ count) && !(/^[0-9\-_]+$/ =~ lot_id))
+      return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Lot_id contains, Count contains, User_id contains')
+    end
+
+    if (!(/^[0-9\-_]+$/ =~ user_buyer_id) && !(/^[0-9\-_]+$/ =~ lot_id))
+      return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','User_id contains, Lot_id contains')
+    end
+
+    if (!(/^[0-9\-_]+$/ =~ user_buyer_id) && !(/^[0-9\-_]+$/ =~ count))
+      return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','User_id contains, Count contains')
+    end
+
+    if (!(/^[0-9\-_]+$/ =~ count) && !(/^[0-9\-_]+$/ =~ lot_id))
+      return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Lot_id contains, Count contains')
+    end
+
+    if !(/^[0-9\-_]+$/ =~ user_buyer_id)
+      return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','User_id contains')
+    end
+
+    if !(/^[0-9\-_]+$/ =~ lot_id)
+      return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Lot_id contains')
+    end
+
+    if !(/^[0-9\-_]+$/ =~ count)
+      return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Count contains')
+    end
+
+
+
+    if !Lot.where(:id => lot_id).any? #проверка на существование лота
+      return enter_data_error(lot_id,user_buyer_id,count, 'buy_lot', 'Lot exists')
+    end
+
+    if !User.where(:id => user_buyer_id).any? #проверка на существование пользователя
+      return enter_data_error(lot_id,user_buyer_id,count, 'buy_lot', 'User exists')
+    end
+
 
     lot = Lot[:id => lot_id]
-
 
     user_buyer = User[:id => user_buyer_id]
     user_seller = User[:id => lot.user_id]
 
+    if user_buyer_id == user_seller.id
+      return enter_data_error(lot_id,user_buyer_id,count, 'buy_lot', 'Same user')
+    end
     # time_update = Time.new #вариант со временем
     #
     # if time_update.month < 10
@@ -145,14 +216,14 @@ class Lot
     lot_price = lot.price
     lot_item_id = lot.item_id
 
-    if user_buyer.money - lot.price*count>=0 #проверка на наличие нужной суммы денег у продавца
+    if user_buyer.money - lot_price*count.to_i>=0 #проверка на наличие нужной суммы денег у продавца
 
     200.times do #цикл для попытки купить товар
 
     lot = Lot[:id => lot_id]
-    lot_count  = lot.count_lot - count
+    lot_count  = lot.count_lot - count.to_i
 
-     if count <= lot.count_lot
+     if count.to_i <= lot.count_lot
 
       #проверка на количество покупаемых предметов
 
@@ -172,20 +243,20 @@ class Lot
               lot.delete #удаление лота по той же причине
             end
 
-           user_seller.update(:money => user_seller.money + lot_price * count) #обновление суммы денег у продавца
-           user_buyer.update(:money => user_buyer.money - lot_price * count) #обновление суммы денег у покупателя
+           user_seller.update(:money => user_seller.money + lot_price * count.to_i) #обновление суммы денег у продавца
+           user_buyer.update(:money => user_buyer.money - lot_price * count.to_i) #обновление суммы денег у покупателя
            item = Item[:item_id => lot_item_id, :user_id => user_buyer_id]
 
            if item #проверка на наличие предмета такого же типа у покупателя в инвентаре
 
-             item.update(:count_item => item.count_item + count)
+             item.update(:count_item => item.count_item + count.to_i)
              #если есть, то прибавляем количество купленных предметов
            else
              Item.insert(:item_id => lot_item_id, :count_item => count, :user_id => user_buyer.id)
              #если нет, то создаем новую запись
            end
 
-           return true
+           return success_buy_items_message(user_buyer_id, lot_id,count)
 
          end
        # end
@@ -204,18 +275,19 @@ class Lot
      else
 
 
-       return false
+       return having_lot_items_error(user_buyer_id, lot_id, count)
 
      end #конец условия на проверку количество покупаемых предметов
 
-
-
     end #конец цикла попыток для совершения покупок
 
+      return timeout_exceeded_message(user_buyer_id, lot_id, count)
+
+   else
+    having_money_error(user_buyer_id,lot_id, user_buyer.money, count)
    end #конец условия проверка на наличие нужной суммы денег у продавца
 
 
-    return false
 
   end
 
