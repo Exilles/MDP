@@ -200,7 +200,7 @@ class Lot
     user_buyer = User[:id => user_buyer_id]
     user_seller = User[:id => lot.user_id]
 
-    if user_buyer_id == user_seller.id
+    if user_buyer_id.to_i == user_seller.id
       return enter_data_error(lot_id,user_buyer_id,count, 'buy_lot', 'Same user')
     end
     # time_update = Time.new #вариант со временем
