@@ -16,9 +16,9 @@ require_relative 'db/models/ad'
 require_relative 'db/models/lot'
 require_relative 'db/models/item'
 require_relative 'db/models/user'
-require_relative 'controls/registration'
 require_relative 'controls/inventory'
 require_relative 'controls/lot'
+require_relative 'controls/ads'
 require_relative 'controls/errors'
 
 store = ItemStore.new('config.yml').all
@@ -126,10 +126,10 @@ store = ItemStore.new('config.yml').all
 #   end
 # }
 
-# n = 1000
+# n = 1
 # Benchmark.bm do |x|
 #   x.report { n.times do
-#     User[:id => 1].update(:money => User[:id => 1].money + 0 * 1)
+#     return_valid(1.to_s, 9.to_s, store)
 #   end }
 # end
 
@@ -215,9 +215,4 @@ store = ItemStore.new('config.yml').all
 # lots[lot_id - 1] = lot.time
 # p lots
 
-user_id = "1"
-item_id = "1"
-count = "1"
-price = "1"
-
-puts add_lot_valid(user_id, item_id, count, price, store)
+# 0.036413

@@ -1,8 +1,8 @@
 def show_lots(store, user_id, type = "lots", error = "") # отображение лотов
 
-  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<information type=\"#{type}\">#{error}<market>\n"
+  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><information type=\"#{type}\">#{error}<user_id>#{user_id}</user_id><market>"
   Lot.where(:user_id => user_id).each do |lot|
-    xml << "<lot id=\"#{lot.id}\" name=\"#{store[Item[:item_id => lot.item_id].item_id].name}\" count=\"#{lot.count_lot}\" price=\"#{lot.price}\"/>\n"
+    xml << "<lot id=\"#{lot.id}\" name=\"#{store[Item[:item_id => lot.item_id].item_id].name}\" count=\"#{lot.count_lot}\" price=\"#{lot.price}\" ad_id=\"#{lot.ad_id}\"/>"
   end
   xml << "</market></information>"
 
@@ -20,7 +20,6 @@ def add_lot(user_id, item_id, count, price) # добавление лота
     item.delete # предмет из инвентаря удаляем, т.к. его кол-во = 0
   end
   lot.save
-  lot
 
 end
 
@@ -50,23 +49,19 @@ def buy_lot(user_id, lot_id, count) # покупка из лота
 
 end
 
-def return_lot (user_id, lot_id) # возврат лота (отмена лота)
+def return_lot (lot_id) # возврат лота (отмена лота)
 
   lot = Lot[:id => lot_id] # lot = лоту, который хотим вернуть, если такого лота нет, то = nil
-  if user_id == lot.user_id # если id пользователя, который хочет вернуть предмет == id пользователя, который выставил лот, то
-    item = Item[:item_id => lot.item_id, :user_id => lot.user_id] # item = предмету пользователя, который выставлен в лоте, если предмета нет, то = nil
-    if item # если предмет есть в инвентаре пользователя, то
-      item.update(:count_item => item.count_item + lot.count_lot) # увеличиваем его кол-во на кол-во предмета из инвентаря
-    else
-      Item.insert(:item_id => lot.item_id, :count_item => lot.count_lot, :user_id => lot.user_id) # иначе добавляем предмет в инвентарь пользователя с кол-вом равным кол-ву лота
-    end
-
-    if Lot[:id => lot_id].ad_id # если у лота есть объявление, то
-      Ad[:lot_id => lot_id].delete # удаляем это объявление, т.к. лота уже нет
-    end
-    # иначе у лота нет объявления и мы ничего не удаляем
-    lot.delete # после возврата предмета и удаления объявления лота, наконец удаляем сам лот
+  item = Item[:item_id => lot.item_id, :user_id => lot.user_id] # item = предмету пользователя, который выставлен в лоте, если предмета нет, то = nil
+  if item # если предмет есть в инвентаре пользователя, то
+    item.update(:count_item => item.count_item + lot.count_lot) # увеличиваем его кол-во на кол-во предмета из инвентаря
+  else
+    Item.insert(:item_id => lot.item_id, :count_item => lot.count_lot, :user_id => lot.user_id) # иначе добавляем предмет в инвентарь пользователя с кол-вом равным кол-ву лота
   end
-  # иначе возврат лота хочет сделать не тот пользователь, который его выставил, а значит отменяем возврат
+  if Lot[:id => lot_id].ad_id # если у лота есть объявление, то
+    Ad[:lot_id => lot_id].delete # удаляем это объявление, т.к. лота уже нет
+  end
+  # иначе у лота нет объявления и мы ничего не удаляем
+  lot.delete # после возврата предмета и удаления объявления лота, наконец удаляем сам лот
 
 end

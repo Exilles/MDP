@@ -12,7 +12,6 @@ require_relative 'db/models/ad'
 require_relative 'db/models/lot'
 require_relative 'db/models/item'
 require_relative 'db/models/user'
-require_relative 'controls/registration'
 require_relative 'controls/inventory'
 require_relative 'controls/lot'
 require_relative 'controls/ads'
@@ -23,7 +22,7 @@ store = ItemStore.new('config.yml').all
 get '/registration' do
 
   content_type 'xml'
-  register_valid(params['login'].to_s, params['password'].to_s)
+  registration_valid(params['login'].to_s, params['password'].to_s)
 
 end
 
@@ -50,7 +49,8 @@ end
 
 get '/lots/return' do
 
-  return_lot(params['user_id'].to_i, params['lot_id'].to_i)
+  content_type 'xml'
+  return_valid(params['user_id'].to_s, params['lot_id'].to_s, store)
 
 end
 
@@ -70,19 +70,21 @@ end
 
 get '/ads/add' do
 
-  add_ad(store, params['user_id'].to_i, params['lot_id'].to_i)
+  content_type 'xml'
+  add_ad_valid(params['user_id'].to_s, params['lot_id'].to_s, store)
 
 end
 
 get '/ads/delete' do
 
-  delete_ad(params['user_id'].to_i, params['ad_id'].to_i)
+  content_type 'xml'
+  delete_ad_valid(params['user_id'].to_s, params['ad_id'].to_s, store)
 
 end
 
 get ('/ads/filter') do
 
   content_type 'xml'
-  filter_ads(params['name'], params['count'], params['price'])
+  filter_ads_valid(params['name'], params['count'], params['price'])
 
 end
