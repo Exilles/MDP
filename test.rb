@@ -16,6 +16,9 @@ require_relative 'db/Model/user'
 require_relative 'controls/user_def'
 require_relative 'db/Model/finoperation'
 
+require_relative 'controls/message'
+require_relative 'controls/error'
+
 Sequel::Model.db.extension :pg_array
 
 
@@ -136,33 +139,33 @@ Sequel::Model.db.extension :pg_array
 #
 # threads.each(&:join)
 
-# n = 1
-# lot = Lot.new
-# Benchmark.bm do |x|
-# x.report { n.times do ;
-# lot.buy_lot(19,1,2)
-# end
-# }
-# end
+n = 1
+lot = Lot.new
+Benchmark.bm do |x|
+x.report { n.times do ;
+lot.return_lot(66.to_s,1.to_s)
+end
+}
+end
 # Sequel.extension :core_extensions
 # Sequel.extension :core_refinements
 # Sequel.extension :pg_array_ops
 
-mass = []
-lot = Lot.new
-threads = []
-i=0
- # threads << Thread.new do
- #   lot.buy_lot(63, 2, 1)
- #   # lot.update_time.push(1)
- #   # lot.save
- # end
-
-
-
-pattern = /[0-9]/
-
-puts pattern=~"9"
+# mass = []
+# lot = Lot.new
+# threads = []
+# i=0
+#  # threads << Thread.new do
+#  #   lot.buy_lot(63, 2, 1)
+#  #   # lot.update_time.push(1)
+#  #   # lot.save
+#  # end
+#
+#
+#
+# pattern = /[0-9]/
+#
+# puts pattern=~"9"
 
 
 

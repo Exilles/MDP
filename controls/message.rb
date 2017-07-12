@@ -2,9 +2,10 @@
 def success_return_lot_message(lot)
 
   all_items = Item.new('item.yml').all
+  user = User[:id=>lot.user_id]
   xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <information type=\"return_lot\" >"
-  xml << "<data><lot_id>#{lot.lot_id}</lot_id><user_id>#{lot.user_id}</user_id><count_lot>#{lot.count_lot}</count_lot><price>#{lot.price}</price></data><message>Lot was successfully returned</message>"
-  xml <<"<inventory money=\"#{User[:id=>user_id].money}\" nickname=\"#{User[:id=>user_id].login}\" user_id=\"#{user_id}\" >"
+  xml << "<data><lot_id>#{lot.id}</lot_id><user_id>#{lot.user_id}</user_id><count_lot>#{lot.count_lot}</count_lot><price>#{lot.price}</price></data><message>Lot was successfully returned</message>"
+  xml <<"<inventory money=\"#{user.money}\" nickname=\"#{user.login}\" user_id=\"#{lot.user_id}\" >"
   Item.where(:user_id => lot.user_id).each do |item|
     xml << "  <item name=\"#{all_items[item.item_id].name}\" count=\"#{item.count_item}\" cost=\"#{all_items[item.item_id - 1].cost}\" item_id=\"#{item.id}\"/>\n"
   end

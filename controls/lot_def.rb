@@ -65,15 +65,15 @@ class Lot
 
   def return_lot (lot_id, user_id)
 
-    if lot_id != '' && user_id!=''
+    if lot_id == '' && user_id==''
      return enter_data_error(nil, nil,0, 'return_lot','')
     end
 
-    if lot_id != '' #проверка на ввод id лота
+    if lot_id == '' #проверка на ввод id лота
      return enter_data_error(nil, user_id,0, 'return_lot','')
     end #конец условия на проверку ввода лота
 
-    if user_id!=''  #проверка на ввод id пользователя
+    if user_id== ''  #проверка на ввод id пользователя
       return  enter_data_error(lot_id,nil,0,'return_lot','')
     end #конец проверки на ввод id пользователя
 
