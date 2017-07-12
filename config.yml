@@ -1,7 +1,7 @@
 ---
 0: !ruby/object:ItemYml
   name: Count_of_lots
-  price: '5'
+  price: '10'
   id: 0
 1: !ruby/object:ItemYml
   name: Banana

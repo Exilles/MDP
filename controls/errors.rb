@@ -89,8 +89,8 @@ def add_lot_valid(user_id, item_id, count, price, store)
         error << "<error>Enter the price.</error>"
       end
     else
-      if Lot.where(:user_id => user_id.to_i).count > 6
-        error << "You can have a maximum of 5 lots."
+      if Lot.where(:user_id => user_id.to_i).count > store[0].price.to_i
+        error << "You can have a maximum of 10 lots."
         flag_lots = true
       else
         if item_id != ""
@@ -205,6 +205,7 @@ def add_lot_valid(user_id, item_id, count, price, store)
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?><information type=\"add_lot\">#{error}</information>"
     end
   else
+    add_lot(user_id.to_i, item_id.to_i, count.to_i, price.to_i)
     error << "<data><user_id>#{user_id}</user_id><item_id>#{item_id}</item_id><count>#{count}</count><price>#{price}</price></data><message>Lot was successfully added!</message>"
     show_lots(store, user_id.to_i, "add_lot", error)
   end
@@ -379,7 +380,7 @@ def delete_ad_valid(user_id, ad_id, store)
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?><information type=\"delete_lot\">#{error}</information>"
     end
   else
-    delete_ad(user_id.to_i, ad_id.to_i)
+    delete_ad(ad_id.to_i)
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?><information type=\"delete_ad\"><data><user_id>#{user_id}</user_id><ad_id>#{ad_id}</ad_id></data><message>Ad was successfully deleted!</message></information>"
   end
 
@@ -401,5 +402,166 @@ def filter_ads_valid(name, count, price)
   else
     filter_ads(name, count, price)
   end
+
+end
+
+def buy_lot_valid(user_id, lot_id, count)
+
+  error = ""
+  flag = false
+  if user_id != ""
+    if !(/^[0-9\-_]+$/ =~ user_id) || user_id.include?("-") || user_id.include?("_")
+      error << "<error>User id contains invalid characters.</error>"
+      if lot_id != ""
+        if !(/^[0-9\-_]+$/ =~ lot_id) || lot_id.include?("-") || lot_id.include?("_")
+          error << "<error>Lot id contains invalid characters.</error>"
+        end
+      else
+        error << "<error>Enter the lot id.</error>"
+      end
+    elsif !User.where(:id => user_id.to_i).any?
+      error << "<error>User does not exist.</error>"
+    else
+      if lot_id != ""
+        if !(/^[0-9\-_]+$/ =~ lot_id) || lot_id.include?("-") || lot_id.include?("_")
+          error << "<error>Lot id contains invalid characters.</error>"
+        elsif !Ad.where(:id => lot_id.to_i).any?
+          error << "<error>Lot does not exist.</error>"
+          flag = true
+        elsif Lot[:lot_id => lot_id.to_i].user_id != user_id.to_i
+          error << "<error>This user does not have such an lot.</error>"
+          flag = true
+        end
+      else
+        error << "<error>Enter the lot id.</error>"
+      end
+    end
+  else
+    if lot_id != ""
+      if !(/^[0-9\-_]+$/ =~ lot_id) || lot_id.include?("-") || lot_id.include?("_")
+        error << "<error>Lot id contains invalid characters.</error>"
+      end
+    else
+      error << "<error>Enter the ad id.</error>"
+    end
+    if count != ""
+      if !(/^[0-9\-_]+$/ =~ count) || count.include?("-") || count.include?("_")
+        error << "<error>Count id contains invalid characters.</error>"
+      end
+    else
+      error << "<error>Enter the count id.</error>"
+    end
+    error << "<error>Enter the user id.</error>"
+  end
+
+  if error != ""
+    error = "<data><user_id>#{user_id}</user_id><ad_id>#{ad_id}</ad_id></data><errors>#{error}</errors>"
+    if flag
+      show_lots(store, user_id.to_i, "delete_lot", error)
+    else
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?><information type=\"delete_lot\">#{error}</information>"
+    end
+  else
+    buy_lot(user_id.to_i, lot_id.to_i, count.to_i)
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><information type=\"delete_ad\"><data><user_id>#{user_id}</user_id><ad_id>#{ad_id}</ad_id></data><message>Ad was successfully deleted!</message></information>"
+  end
+
+end
+
+
+
+def enter_data_error(lot_id, user_id, count, type, description)
+
+  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <information type=\"#{type}\" >"
+  xml << "<data>"
+  xml << "<user_id>#{user_id}</user_id>"
+  if lot_id!=0
+    xml << "<lot_id>#{lot_id}</lot_id>"
+  end
+  if count!=0
+    xml << "<count>#{count}</count>"
+  end
+  xml << "</data><errors>"
+
+  if user_id == nil
+    xml << "<error>User_id does not enter</error>"
+  end
+
+  if lot_id == nil
+    xml << "<error>Lot_id does not enter</error>"
+  end
+
+  if count == nil
+    xml << "<error>Count does not enter</error>"
+  end
+
+  if description.include?('User_id contains')
+    xml << "<error>User_id contains invalid characters</error>"
+  end
+
+  if description.include?('Lot_id contains')
+    xml << "<error>Lot_id contains invalid characters</error>"
+  end
+
+  if description.include?('Count contains')
+    xml << "<error>Count contains invalid characters</error>"
+  end
+
+  if  description.include?('User exists')
+    xml << "<error>User doesn't exist</error>"
+  end
+
+  if  description.include?('Lot exists')
+    xml << "<error>Lot doesn't exist</error>"
+  end
+
+  if description.include?('Same user')
+    xml << "<error>Buyer's and seller's id can not match</error>"
+  end
+
+  xml << "</errors>"
+  xml << "</information>"
+end
+
+def having_error(user_id, lot_id)
+  all_items = ItemStore.new('config.yml').all
+  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <information type=\"return_lot\" >"
+  xml << "<data><user_id>#{user_id}</user_id><lot_id>#{lot_id}</lot_id></data><errors><error>User doesn't have this lot</error></errors>"
+
+  Lot.where(:user_id => user_id).each do |lot|
+    xml << "<lots><lot name=\"#{all_items[lot.item_id].name}\" price=\"#{lot.price}\" count=\"#{lot.count_lot}\" item_id=\"#{lot.item_id}\" lot_id=\"#{lot.id}\"/></lots>"
+  end
+
+  if Lot[:user_id => user_id]==nil
+    xml << "<lots>User doesn't have any lots</lots>"
+  end
+
+  xml << "</information>"
+end
+
+def having_money_error(user_id, lot_id,money, count)
+
+  all_items = ItemStore.new('config.yml').all
+  lot = Lot[:id => lot_id]
+  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <information type=\"buy_lot\" >"
+  xml << "<data><user_id>#{user_id}</user_id><lot_id>#{lot_id}</lot_id><count>#{count}</count></data><errors><error>Not enough money to buy</error></errors>"
+  xml << "<money>#{money}</money>"
+  xml << "<lot name=\"#{all_items[lot.item_id].name}\" price=\"#{lot.price}\" count=\"#{lot.count_lot}\" item_id=\"#{lot.item_id}\" lot_id=\"#{lot.id}\"/>\n"
+  xml << "</information>"
+
+end
+
+def having_lot_items_error(user_id,lot_id,count)
+
+  all_items = ItemStore.new('config.yml').all
+  lot = Lot[:id => lot_id]
+
+  xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <information type=\"buy_lot\" >"
+  xml << "<data><user_id>#{user_id}</user_id><lot_id>#{lot_id}</lot_id><count>#{count}</count></data><errors><error>Not enough items to buy</error></errors>"
+
+  xml << "<lot name=\"#{all_items[lot.item_id].name}\" price=\"#{lot.price}\" count=\"#{lot.count_lot}\" item_id=\"#{lot.item_id}\" lot_id=\"#{lot.id}\"/>\n"
+
+  xml << "</information>"
+
 
 end

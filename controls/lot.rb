@@ -23,29 +23,162 @@ def add_lot(user_id, item_id, count, price) # добавление лота
 
 end
 
-def buy_lot(user_id, lot_id, count) # покупка из лота
+def buy_lot(lot_id, count, user_buyer_id)
 
-  10.times do
-    lot = Lot[:id => lot_id]
-    if count <= lot.count_lot
-      new_count_item = lot.count_lot - count
-      if Lot.where(:id => lot_id, :count_lot => lot.count_lot).update(:count_lot => new_count_item) != 0
-        lot = Lot[:id => lot_id]
-        user_buy = User[:id => user_id]
-        User[:id => lot.user_id].update(:money => User[:id => lot.user_id].money + lot.price * count) # прибавляем бабосики продавцу
-        user_buy.update(:money => user_buy.money - lot.price * count) # вычитаем бабосики покупателя
-        item_buy = Item[:item_id => lot.item_id, :user_id => user_buy.id] # item_buy = предмету, который купил покупатель, если такого предмета нет, то = nil
-        if lot.count_lot == 0
-          lot.delete
-        end
-        if item_buy # если предмет есть в инвентаре покупателя, то
-          item_buy.update(:count_item => item_buy.count_item + count) # увеличиваем кол-во этого предмета
-        else
-          Item.insert(:item_id => lot.item_id, :count_item => count, :user_id => user_id) # иначе добавляем предмет покупателю в инвентарь
-        end
-      end
-    end
+
+  if count =='' && lot_id =='' && user_buyer_id ==''
+    return enter_data_error(nil,nil,nil,'buy_lot', '')
   end
+
+  if lot_id=='' && count==''
+    return enter_data_error(nil,user_buyer_id,nil, 'buy_lot', '')
+  end
+
+  if lot_id == '' && user_buyer_id == ''
+    return enter_data_error(nil,nil,count,'buy_lot', '')
+  end
+
+  if count =='' && user_buyer_id == ''
+    return enter_data_error(lot_id,nil,nil,'buy_lot','')
+  end
+
+  if user_buyer_id == ''
+    return enter_data_error(lot_id,nil,count,'buy_lot','')
+  end
+
+  if count == ''
+    return enter_data_error(lot_id,user_buyer_id,nil,'buy_lot','')
+  end
+
+  if lot_id == ''
+    return enter_data_error(nil,user_buyer_id,count,'buy_lot','')
+  end
+
+
+
+  if (!(/^[0-9\-_]+$/ =~ user_buyer_id) && !(/^[0-9\-_]+$/ =~ count) && !(/^[0-9\-_]+$/ =~ lot_id))
+    return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Lot_id contains, Count contains, User_id contains')
+  end
+
+  if (!(/^[0-9\-_]+$/ =~ user_buyer_id) && !(/^[0-9\-_]+$/ =~ lot_id))
+    return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','User_id contains, Lot_id contains')
+  end
+
+  if (!(/^[0-9\-_]+$/ =~ user_buyer_id) && !(/^[0-9\-_]+$/ =~ count))
+    return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','User_id contains, Count contains')
+  end
+
+  if (!(/^[0-9\-_]+$/ =~ count) && !(/^[0-9\-_]+$/ =~ lot_id))
+    return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Lot_id contains, Count contains')
+  end
+
+  if !(/^[0-9\-_]+$/ =~ user_buyer_id)
+    return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','User_id contains')
+  end
+
+  if !(/^[0-9\-_]+$/ =~ lot_id)
+    return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Lot_id contains')
+  end
+
+  if !(/^[0-9\-_]+$/ =~ count)
+    return enter_data_error(lot_id,user_buyer_id,count,'buy_lot','Count contains')
+  end
+
+
+
+  if !Lot.where(:id => lot_id).any? #проверка на существование лота
+    return enter_data_error(lot_id,user_buyer_id,count, 'buy_lot', 'Lot exists')
+  end
+
+  if !User.where(:id => user_buyer_id).any? #проверка на существование пользователя
+    return enter_data_error(lot_id,user_buyer_id,count, 'buy_lot', 'User exists')
+  end
+
+
+  lot = Lot[:id => lot_id]
+
+  user_buyer = User[:id => user_buyer_id]
+  user_seller = User[:id => lot.user_id]
+
+  if user_buyer_id.to_i == user_seller.id
+    return enter_data_error(lot_id,user_buyer_id,count, 'buy_lot', 'Same user')
+  end
+
+  lot_price = lot.price
+  lot_item_id = lot.item_id
+
+  if user_buyer.money - lot_price*count.to_i>=0 #проверка на наличие нужной суммы денег у продавца
+
+    200.times do #цикл для попытки купить товар
+
+      lot = Lot[:id => lot_id]
+      lot_count  = lot.count_lot - count.to_i
+
+      if count.to_i <= lot.count_lot
+
+        #проверка на количество покупаемых предметов
+
+        # operation_time = DB[:finoperations].min(:operation_time)
+
+        # if operation_time == time_for_base.to_i #проверям совпадает ли минимальное время операции с временем покупки пользователя
+
+        #Thread.new do # распределение потоков, для предотвращения одновременной покупки предметов
+        #mutex.synchronize do
+
+        if Lot.where(:id => lot_id, :count_lot => lot.count_lot).update(:count_lot => lot_count)!=0  #lot.update(:count_lot => lot.count_lot - count)#обновление количества предметов в лоте
+
+
+
+          if lot_count == 0 #проверка на наличия предметов в лоте после успешной покупки
+            Ad.where(:lot_id => lot.id).delete #удаление объявление, если товара в лоте больше нет
+            lot.delete #удаление лота по той же причине
+          end
+
+          user_seller.update(:money => user_seller.money + lot_price * count.to_i) #обновление суммы денег у продавца
+          user_buyer.update(:money => user_buyer.money - lot_price * count.to_i) #обновление суммы денег у покупателя
+          item = Item[:item_id => lot_item_id, :user_id => user_buyer_id]
+
+          if item #проверка на наличие предмета такого же типа у покупателя в инвентаре
+
+            item.update(:count_item => item.count_item + count.to_i)
+            #если есть, то прибавляем количество купленных предметов
+          else
+            Item.insert(:item_id => lot_item_id, :count_item => count, :user_id => user_buyer.id)
+            #если нет, то создаем новую запись
+          end
+
+          return success_buy_items_message(user_buyer_id, lot_id,count)
+
+        end
+        # end
+
+
+
+        # else
+        #   lot = Lot[:id => lot_id]
+        #
+        #    if !lot
+        #     return false
+        #    end
+
+        # end # конец условия на совпадение минимального времени операции с временем покупки пользователя
+
+      else
+
+
+        return having_lot_items_error(user_buyer_id, lot_id, count)
+
+      end #конец условия на проверку количество покупаемых предметов
+
+    end #конец цикла попыток для совершения покупок
+
+    return timeout_exceeded_message(user_buyer_id, lot_id, count)
+
+  else
+    having_money_error(user_buyer_id,lot_id, user_buyer.money, count)
+  end #конец условия проверка на наличие нужной суммы денег у продавца
+
+
 
 end
 

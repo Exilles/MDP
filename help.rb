@@ -20,6 +20,7 @@ require_relative 'controls/inventory'
 require_relative 'controls/lot'
 require_relative 'controls/ads'
 require_relative 'controls/errors'
+require_relative 'controls/message'
 
 store = ItemStore.new('config.yml').all
 

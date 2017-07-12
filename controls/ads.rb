@@ -19,7 +19,7 @@ def add_ad(store, user_id, lot_id) # добавление объявления
 
   user = User[:id => user_id] # user = пользователю, который добавляет объявление
   lot = Lot[:id => lot_id] # lot = лоту, к которому добавляется объявление
-  ad = Ad.create(:user_id => user.id, :description => "Sold item #{store[lot.item_id].name} х #{lot.count_lot} pieces at a price of #{lot.price} coins apiece", :lot_id => lot_id) # ad = объявлению + добавление этого объявления
+  ad = Ad.create(:user_id => user.id, :description => "Sold item '#{store[lot.item_id].name}' х #{lot.count_lot} pieces at a price of #{lot.price} coins apiece", :lot_id => lot_id) # ad = объявлению + добавление этого объявления
   lot.update(:ad_id => ad.id) # обновляем лот (добавляем к нему id объявления)
   user.update(:money => user.money - 10) # вычитаем деньги у пользователя за объявление
 

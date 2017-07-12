@@ -16,6 +16,7 @@ require_relative 'controls/inventory'
 require_relative 'controls/lot'
 require_relative 'controls/ads'
 require_relative 'controls/errors'
+require_relative 'controls/message'
 
 store = ItemStore.new('config.yml').all
 
@@ -56,7 +57,8 @@ end
 
 get '/lots/buy' do
 
-  buy_lot(params['user_id'].to_i, params['lot_id'].to_i, params['count'].to_i)
+  content_type 'xml'
+  buy_lot(params['lot_id'].to_s, params['count'].to_s, params['user_id'].to_s)
 
 end
 
