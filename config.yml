@@ -1,0 +1,85 @@
+---
+0: !ruby/object:ItemYml
+  name: Count_of_lots
+  price: '5'
+  id: 0
+1: !ruby/object:ItemYml
+  name: Banana
+  price: '10'
+  id: 1
+2: !ruby/object:ItemYml
+  name: Apple
+  price: '8'
+  id: 2
+3: !ruby/object:ItemYml
+  name: Mandarin
+  price: '7'
+  id: 3
+4: !ruby/object:ItemYml
+  name: Carrot
+  price: '5'
+  id: 4
+5: !ruby/object:ItemYml
+  name: Staff
+  price: '120'
+  id: 5
+6: !ruby/object:ItemYml
+  name: Sword
+  price: '78'
+  id: 6
+7: !ruby/object:ItemYml
+  name: Katana
+  price: '88'
+  id: 7
+8: !ruby/object:ItemYml
+  name: Wand
+  price: '123'
+  id: 8
+9: !ruby/object:ItemYml
+  name: Spear
+  price: '66'
+  id: 9
+10: !ruby/object:ItemYml
+  name: Cloak
+  price: '65'
+  id: 10
+11: !ruby/object:ItemYml
+  name: Pants
+  price: '56'
+  id: 11
+12: !ruby/object:ItemYml
+  name: Dagger
+  price: '45'
+  id: 12
+13: !ruby/object:ItemYml
+  name: Hat
+  price: '34'
+  id: 13
+14: !ruby/object:ItemYml
+  name: Belt
+  price: '22'
+  id: 14
+15: !ruby/object:ItemYml
+  name: Helmet
+  price: '39'
+  id: 15
+16: !ruby/object:ItemYml
+  name: Amulet
+  price: '145'
+  id: 16
+17: !ruby/object:ItemYml
+  name: Ring
+  price: '98'
+  id: 17
+18: !ruby/object:ItemYml
+  name: Boots
+  price: '19'
+  id: 18
+19: !ruby/object:ItemYml
+  name: Bow
+  price: '100'
+  id: 19
+20: !ruby/object:ItemYml
+  name: Earrings
+  price: '244'
+  id: 20
